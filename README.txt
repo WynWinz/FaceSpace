@@ -1,6 +1,6 @@
 Contributors:
-Chris Corsi
 Ryan Ching
+Chris Corsi
 Edwin Mellett
 
 Project:

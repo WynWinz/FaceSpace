@@ -1,8 +1,8 @@
 ---------------
 --Authors:
---Edwin Mellett
 --Ryan Ching
 --Chris Corsi
+--Edwin Mellett
 ---------------
 
 ---------------
