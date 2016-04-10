@@ -1,3 +1,0 @@
---INSERT INTO Profiles (profile_ID,fname,lname,email,DOB) VALUES (1,'Jescie','Axel','Etiam@eleifendCras.co.uk',TO_DATE('01-01-1998','MM-DD-YYYY'));
-INSERT INTO Profiles (profile_ID,fname,lname,email,DOB,lastLogin) VALUES (1,'Stone','Jena','Praesent@nislMaecenasmalesuada.co.uk',TO_DATE('1974-10-19', 'YYYY-MM-DD'),TO_TIMESTAMP('2014-04-20 17:59:12','YYYY-MM-DD HH24:MI:SS'));
---INSERT INTO Profiles (profile_ID,fname,lname,email,DOB,lastLogin) VALUES (1,'Aiko','Gemma','et@malesuadamalesuadaInteger.org','1984-04-02','2015-03-01 13:31:42');
