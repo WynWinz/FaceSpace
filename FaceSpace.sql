@@ -23,7 +23,7 @@ DROP TABLE Messages CASCADE CONSTRAINTS;
 
 PURGE RECYCLEBIN;
 
-CREATE TABLE Profiles (
+--CREATE TABLE Profiles (
 	profile_ID	number(10),
 	fname		char(20),
 	lname 		char(20),
@@ -42,7 +42,7 @@ CREATE TABLE Friends (
 	CONSTRAINT FK_FriendsToProfiles FOREIGN KEY (profile_ID) REFERENCES Profiles(profile_ID)
 );
 
-CREATE TABLE Groups (
+--CREATE TABLE Groups (
 	group_ID	number(10),
 	groupName 	char(30) UNIQUE,
 	description	char(120),
