@@ -51,7 +51,7 @@ CREATE TABLE Friends (
 	CONSTRAINT PK_Groups PRIMARY KEY (group_ID)
 );
 
-CREATE TABLE Members (
+--CREATE TABLE Members (
 	group_ID 	number(10),
 	profile_ID	number(10),
 	CONSTRAINT PK_Members PRIMARY KEY (group_ID, profile_ID),
