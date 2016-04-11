@@ -1,0 +1,10 @@
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (1,9,7,'molestie. Sed','commodo at, libero. Morbi',TO_TIMESTAMP('2015-06-26 11:49:57','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (2,4,6,'Donec nibh','fringilla ornare placerat, orci',TO_TIMESTAMP('2016-08-10 14:07:40','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (3,3,4,'Donec est.','Vivamus nisi. Mauris nulla.',TO_TIMESTAMP('2016-06-16 06:01:07','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (4,6,6,'Maecenas iaculis','Proin sed turpis nec',TO_TIMESTAMP('2016-09-17 06:25:25','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (5,2,4,'lobortis. Class','sed, est. Nunc laoreet',TO_TIMESTAMP('2016-03-29 22:11:30','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (6,2,2,'et, lacinia','mauris blandit mattis. Cras',TO_TIMESTAMP('2016-01-22 11:12:22','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (7,7,7,'Vivamus euismod','justo eu arcu. Morbi',TO_TIMESTAMP('2017-03-07 12:43:36','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (8,1,1,'ornare, libero','Curabitur dictum. Phasellus in',TO_TIMESTAMP('2015-05-17 12:07:14','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (9,8,1,'mauris. Suspendisse','at risus. Nunc ac',TO_TIMESTAMP('2017-02-15 05:21:49','YYYY-MM-DD HH24:MI:SS'));
+INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES (10,3,7,'Aliquam rutrum','nec, malesuada ut, sem.',TO_TIMESTAMP('2015-09-10 20:05:23','YYYY-MM-DD HH24:MI:SS'));
