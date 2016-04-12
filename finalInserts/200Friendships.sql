@@ -29,7 +29,7 @@ INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (7
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (69,81,0,'2015-09-28');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (28,93,1,'2014-11-18');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (37,92,0,'2007-06-21');
-INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (42,42,0,'2015-04-08');
+INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (42,49,0,'2015-04-08');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (35,13,1,'2009-05-01');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (8,21,0,'2009-10-15');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (41,98,1,'2010-02-24');
@@ -75,7 +75,7 @@ INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (9
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (94,22,1,'2008-03-29');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (89,56,1,'2016-01-11');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (56,77,0,'2006-07-07');
-INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (23,23,1,'2009-04-15');
+INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (23,56,1,'2009-04-15');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (40,30,1,'2007-05-11');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (14,83,1,'2016-03-11');
 INSERT INTO Friends (profile_ID,friend_ID,established,dateEstablished) VALUES (41,48,1,'2005-09-03');
