@@ -7,6 +7,7 @@ import string
 inserts = []
 date = False
 time = False
+dateIndex = -2
 
 def readFile(fileName):
 	global inserts
@@ -20,18 +21,18 @@ def readFile(fileName):
 def addTimestamp():
 	global inserts
 	global date, time
+	global dateIndex
 	temp = []
 	for insert in inserts:
-		data = []
+		data = insert.split(',')
 		if(time):
-			data = insert.split(',')
 			timestamp = ' TIMESTAMP '
 			timestamp += data[-1]
 			data[-1] = timestamp
 		if(date):
 			date = ' DATE '
-			date += data[-2]
-			data[-2] = date
+			date += data[dateIndex]
+			data[dateIndex] = date
 		temp.append((',').join(data))
 	inserts = temp
 
@@ -44,6 +45,7 @@ def writeFile(fileName):
 
 def main():
 	global date, time
+	global dateIndex
 	if(len(sys.argv) is not 5):
 		print("python addTimestamp.py time date <input.sql> <output.sql>")
 		print("date = 0 if no date date = 1 if there is date")
@@ -53,6 +55,8 @@ def main():
 		time = True
 	if(sys.argv[2] == '1'):
 		date = True
+		if(sys.argv[1] == '0'):
+			dateIndex = -1;
 	readFile(sys.argv[3])
 	addTimestamp()
 	writeFile(sys.argv[4])
