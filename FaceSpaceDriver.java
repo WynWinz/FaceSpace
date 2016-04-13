@@ -23,7 +23,7 @@ public class FaceSpaceDriver {
 	}
 
 
-	private static void run() {
+	private static void run() throws SQLException {
 		while(true) {
 			int option = getOption();
 			switch(option) {
