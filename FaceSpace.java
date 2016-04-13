@@ -14,7 +14,9 @@ public class FaceSpace {
 	int numGroups;
 	
 	public void createUser(String name, String email, String dob){
-	
+		
+		
+		
 	}
 
 	public void initiateFriendship(int profileID, int friendID){
@@ -33,8 +35,9 @@ public class FaceSpace {
 	
 	}
 	
-	public void addToGroup(int profileID, int groupID){
+	public void addToGroup(int profileID, String groupName){
 		//check mem limit of group
+		
 	}
 	
 	public void sendMessageToUser(String subject, String body, int recipientID, int senderID){
@@ -45,11 +48,11 @@ public class FaceSpace {
 	
 	}
 	
-	public void searchForUser(){
+	public void searchForUser(String userSearch){
 	
 	}
 	
-	public void threeDegrees(){
+	public void threeDegrees(int userA, int userB){
 	
 	}
 	
@@ -57,7 +60,7 @@ public class FaceSpace {
 	
 	}
 	
-	public void dropUser(){
+	public void dropUser(int profileID){
 	
 	}
 	
