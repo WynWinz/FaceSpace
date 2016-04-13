@@ -97,7 +97,64 @@ public class FaceSpace {
 	}
 
 	public void initiateFriendship(int profileID, int friendID) throws SQLException{
-		//determine if established and date established in here
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 1);
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String todaysDate = format1.format(cal.getTime());
+		System.out.println(todaysDate);
+		
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+			
+			//check to make sure the friendship does not already exist
+			boolean alreadyExists = false;
+	    	query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+profileID+" AND friend_ID = "+friendID;
+	    	ResultSet resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+				alreadyExists = true;
+	 	   	}
+			query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+friendID+" AND friend_ID = "+profileID;
+	    	ResultSet resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+				alreadyExists = true;
+	 	   	}
+
+			if(alreadyExists = false){
+
+			    query = "INSERT INTO Friends (profile_ID, friend_ID, established, dateEstablished) VALUES ("+profileID+", "+friendID+", 0, DATE '"+todaysDate+"')";				
+				int result = statement.executeUpdate(query);
+				connection.commit();
+				Thread.sleep(1000);
+				
+			}
+			else{
+				System.out.println("Friendship already exists.");
+			}
+			
+		    resultSet.close();
+		    //now rollback to end the transaction and release the lock on data. 
+	    	//You can use connection.commit() instead for this example, I just don't want to change the value
+	  	 // connection.rollback();
+	  	  //System.out.println("Transaction Rolled Back!");
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}	
+		
+		
 	}
 	
 	public void establishFriendship(int profileID, int friendID) throws SQLException{
