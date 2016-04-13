@@ -27,7 +27,7 @@ CREATE TABLE Profiles (
 	profile_ID	number(10),
 	fname		char(20),
 	lname 		char(20),
-	email 		char(30),
+	email 		char(50),
 	DOB 		date,
 	lastLogin 	timestamp,
 	CONSTRAINT PK_Profile PRIMARY KEY (profile_ID)
