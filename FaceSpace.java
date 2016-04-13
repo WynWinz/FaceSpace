@@ -117,7 +117,7 @@ public class FaceSpace {
 	
 	}
 	
-	public void setupDatabase(){
+	public void setupDatabase() throws SQLException{
 		
 		String username, password;
 		username = "edm34"; //This is your username in oracle
