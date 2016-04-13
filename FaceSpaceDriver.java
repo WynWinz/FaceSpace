@@ -41,6 +41,7 @@ public class FaceSpaceDriver {
 					break;
 				case 14:
 					System.out.println("Goodbye");
+					fs.closeConnection();;
 					System.exit(1);
 					break;
 			}

@@ -13,6 +13,7 @@ import java.text.ParseException;
 import oracle.jdbc.*;		//needed by java for database connection and manipulation
 import java.util.Date;
 import java.text.*;
+import java.util.Calendar;
 
 public class FaceSpace {
 	
@@ -48,8 +49,6 @@ public class FaceSpace {
 	  		{
 				maxID = resultSet.getInt(1);
 	 	   	}
-
-			System.out.println("max id: "+maxID);
 			maxID++;
 
 		    query = "INSERT INTO PROFILES (profile_ID, fname, lname, email, DOB, lastLogin) VALUES ("+maxID+",'"+fname+"','"+lname+"','"+email+"', DATE '"+dob+"', TIMESTAMP '"+ft.format(dNow)+"')";				
@@ -57,6 +56,7 @@ public class FaceSpace {
 			int result = statement.executeUpdate(query);
 
 			connection.commit();
+			System.out.println("Profile Added.");
 			Thread.sleep(1000);
 			
 			/*
@@ -102,7 +102,6 @@ public class FaceSpace {
 		cal.add(Calendar.DATE, 1);
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		String todaysDate = format1.format(cal.getTime());
-		System.out.println(todaysDate);
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
@@ -110,37 +109,36 @@ public class FaceSpace {
 		    statement = connection.createStatement();
 			
 			//check to make sure the friendship does not already exist
-			boolean alreadyExists = false;
 	    	query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+profileID+" AND friend_ID = "+friendID;
 	    	ResultSet resultSet =statement.executeQuery(query);
+			boolean alreadyExists = false;
 			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
 				alreadyExists = true;
 	 	   	}
+			//check to make sure friendship does not already exist
 			query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+friendID+" AND friend_ID = "+profileID;
-	    	ResultSet resultSet =statement.executeQuery(query);
-			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	    	resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst() && alreadyExists == false)			//returns true if there is data in result set
 	  		{
 				alreadyExists = true;
 	 	   	}
-
-			if(alreadyExists = false){
-
+			
+			//if it doesn't exist, add it
+			if(alreadyExists == false){
 			    query = "INSERT INTO Friends (profile_ID, friend_ID, established, dateEstablished) VALUES ("+profileID+", "+friendID+", 0, DATE '"+todaysDate+"')";				
 				int result = statement.executeUpdate(query);
 				connection.commit();
+				System.out.println();
+				System.out.println("Friendship pending");
 				Thread.sleep(1000);
-				
 			}
 			else{
+				System.out.println();
 				System.out.println("Friendship already exists.");
 			}
 			
 		    resultSet.close();
-		    //now rollback to end the transaction and release the lock on data. 
-	    	//You can use connection.commit() instead for this example, I just don't want to change the value
-	  	 // connection.rollback();
-	  	  //System.out.println("Transaction Rolled Back!");
 		}	
 		catch(Exception Ex)  
 		{
