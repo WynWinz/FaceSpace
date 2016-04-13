@@ -57,11 +57,15 @@ public class FaceSpaceDriver {
 	}
 
 	private static void initiateFriendship() {
-		System.out.println("You initiated a Friendship");
+		int profileID = promptInt("Enter your profile ID");
+		int friendID = promptInt("Enter your friend's ID");
+		fs.initiateFriendship(profileID, friendID);
 	}
 
 	private static void establishFriendship() {
-		System.out.println("You initiated a Friendship");		
+		int profileID = promptInt("Enter your profile ID");
+		int friendID = promptInt("Enter your friend's ID");
+		fs.establishFriendship(profileID, friendID);		
 	}
 
 	private static void demo() {
