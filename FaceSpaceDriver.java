@@ -47,7 +47,7 @@ public class FaceSpaceDriver {
 		}
 	}
 
-	private static void createUser() {
+	private static void createUser() throws SQLException {
 		//System.out.println("You chose create user.");
 		String fname = promptString("Enter your first name");
 		String lname = promptString("Enter your last name");
