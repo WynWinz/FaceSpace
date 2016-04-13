@@ -72,48 +72,48 @@ public class FaceSpace {
 		
 	}
 
-	public void initiateFriendship(int profileID, int friendID){
+	public void initiateFriendship(int profileID, int friendID) throws SQLException{
 		//determine if established and date established in here
 	}
 	
-	public void establishFriendship(int profileID, int friendID){
+	public void establishFriendship(int profileID, int friendID) throws SQLException{
 		
 	}
 	
-	public void displayFriends(int profileID){
+	public void displayFriends(int profileID) throws SQLException{
 	
 	}
 	
-	public void createGroup(String name, String description, int memLimit){
+	public void createGroup(String name, String description, int memLimit) throws SQLException{
 	
 	}
 	
-	public void addToGroup(int profileID, String groupName){
+	public void addToGroup(int profileID, String groupName) throws SQLException{
 		//check mem limit of group
 		
 	}
 	
-	public void sendMessageToUser(String subject, String body, int recipientID, int senderID){
+	public void sendMessageToUser(String subject, String body, int recipientID, int senderID) throws SQLException{
 	
 	}
 	
-	public void displayMessages(int profileID){
+	public void displayMessages(int profileID) throws SQLException{
 	
 	}
 	
-	public void searchForUser(String userSearch){
+	public void searchForUser(String userSearch) throws SQLException{
 	
 	}
 	
-	public void threeDegrees(int userA, int userB){
+	public void threeDegrees(int userA, int userB) throws SQLException{
 	
 	}
 	
-	public void topMessagers(){
+	public void topMessagers() throws SQLException{
 	
 	}
 	
-	public void dropUser(int profileID){
+	public void dropUser(int profileID) throws SQLException{
 	
 	}
 	
@@ -148,7 +148,7 @@ public class FaceSpace {
 		}
 	}
 	
-	public void closeConnection(){
+	public void closeConnection() throws SQLException{
 		try {
 			connection.close();
 	    }
