@@ -11,6 +11,7 @@
 import java.sql.*;  		//import the file containing definitions for the parts
 import java.text.ParseException;
 import oracle.jdbc.*;		//needed by java for database connection and manipulation
+import java.sql.Timestamp;
 
 public class FaceSpace {
 	
@@ -27,14 +28,29 @@ public class FaceSpace {
 		setupDatabase();
 	}
 	
-	public void createUser(String name, String email, String dob) throws SQLException{
+	public void createUser(String fname, String lname, String email, String dob) throws SQLException{
+		
+		java.util.Date today = new java.util.Date();
 
+		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
-	    
-		    query = "update class set max_num_students = 5 where classid = 1";
+	    	query = "SELECT MAX(profile_ID) FROM profiles;";
+	    	ResultSet resultSet =statement.executeQuery(query);
+			int maxID = -1;
+			while(resultSet.next())
+	  		{
+				maxID = resultSet.getInt(1);
+//	 	   		System.out.println(resultSet.getLong(1)+"\t"+resultSet.getLong(2)+"\t"+resultSet.getDouble(3));
+	 	   	}
+			System.out.println("max id: "+maxID);
+			maxID++;
+		    query = "INSERT INTO PROFILES (profile_ID, fname, lname, email, DOB, lastLogin) VALUES ("+maxID+",'"+fname+"','"+lname+"','"+email+"', DATE '"+dob+"', TIMESTAMP '"+today.getTime()+"');";				
+			int result = statement.executeUpdate(query);
+			thread.sleep(5000);
+			/*
 		    int result = statement.executeUpdate(query); 
 	    
 		    //sleep for 5 seconds, so that we have time to switch to the other transaction
@@ -54,8 +70,8 @@ public class FaceSpace {
 		    resultSet.close();
 		    //now rollback to end the transaction and release the lock on data. 
 	    	//You can use connection.commit() instead for this example, I just don't want to change the value
-	  	  connection.rollback();
-	  	  System.out.println("Transaction Rolled Back!");
+	  	 // connection.rollback();
+	  	  //System.out.println("Transaction Rolled Back!");
 		}	
 		catch(Exception Ex)  
 		{
@@ -67,8 +83,7 @@ public class FaceSpace {
 			} catch (SQLException e) {
 				System.out.println("Cannot close Statement. Machine error: "+e.toString());
 			}
-		}
-		
+		}	
 		
 	}
 
