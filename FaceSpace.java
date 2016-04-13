@@ -23,7 +23,7 @@ public class FaceSpace {
     private ResultSet resultSet; //used to hold the result of your query (if one exists)
 	private String query;
 	
-	public FaceSpace(){
+	public FaceSpace() throws SQLException{
 		setupDatabase();
 	}
 	
