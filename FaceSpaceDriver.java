@@ -31,8 +31,8 @@ public class FaceSpace {
 	public void setupDatabase(){
 		
 		String username, password;
-		username = "username"; //This is your username in oracle
-		password = "password"; //This is your password in oracle
+		username = "edm34"; //This is your username in oracle
+		password = "3913516"; //This is your password in oracle
 	
 		try{
 			System.out.println("Registering DB..");
