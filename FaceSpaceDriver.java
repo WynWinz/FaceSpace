@@ -12,16 +12,16 @@ import java.sql.*;
 import java.util.*;
 import java.io.*;	
 
-public class FaceSpaceDriver{
+public class FaceSpaceDriver {
 
-	//private static FaceSpace fs;
+	private static FaceSpace fs;
 	private static Scanner in = new Scanner(System.in);
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws SQLException{
 		//fs = new FaceSpace();
 		run();	
 	}
+
 
 	private static void run() {
 		while(true) {
