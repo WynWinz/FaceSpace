@@ -11,7 +11,8 @@
 import java.sql.*;  		//import the file containing definitions for the parts
 import java.text.ParseException;
 import oracle.jdbc.*;		//needed by java for database connection and manipulation
-import java.sql.Timestamp;
+import java.util.Date;
+import java.text.*;
 
 public class FaceSpace {
 	
@@ -29,27 +30,35 @@ public class FaceSpace {
 	}
 	
 	public void createUser(String fname, String lname, String email, String dob) throws SQLException{
-		
-		java.util.Date today = new java.util.Date();
 
-		
+		Date dNow = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//System.out.println(ft.format(dNow));
+
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
-	    	query = "SELECT MAX(profile_ID) FROM profiles;";
+
+	    	query = "SELECT MAX(profile_ID) FROM Profiles";
 	    	ResultSet resultSet =statement.executeQuery(query);
+	    
 			int maxID = -1;
 			while(resultSet.next())
 	  		{
 				maxID = resultSet.getInt(1);
-//	 	   		System.out.println(resultSet.getLong(1)+"\t"+resultSet.getLong(2)+"\t"+resultSet.getDouble(3));
 	 	   	}
+
 			System.out.println("max id: "+maxID);
 			maxID++;
-		    query = "INSERT INTO PROFILES (profile_ID, fname, lname, email, DOB, lastLogin) VALUES ("+maxID+",'"+fname+"','"+lname+"','"+email+"', DATE '"+dob+"', TIMESTAMP '"+today.getTime()+"');";				
+
+		    query = "INSERT INTO PROFILES (profile_ID, fname, lname, email, DOB, lastLogin) VALUES ("+maxID+",'"+fname+"','"+lname+"','"+email+"', DATE '"+dob+"', TIMESTAMP '"+ft.format(dNow)+"')";				
+
 			int result = statement.executeUpdate(query);
-			Thread.sleep(5000);
+
+			connection.commit();
+			Thread.sleep(1000);
+			
 			/*
 		    int result = statement.executeUpdate(query); 
 	    
@@ -149,18 +158,21 @@ public class FaceSpace {
 		    
 		    System.out.println("Connect to DB..");
 		    //create a connection to DB on class3.cs.pitt.edu
-		    connection = DriverManager.getConnection(url, username, password); 
+		    connection = DriverManager.getConnection(url, username, password);
+		   	
+
+ 
 		}
 		catch(Exception Ex)  {
 		    System.out.println("Error connecting to database.  Machine Error: " +
 	      	Ex.toString());
 		}
-		finally
+		/*finally
 		{
 			 /* NOTE: the connection should be created once and used through out the whole project;
 			 * Is very expensive to open a connection therefore you should not close it after every operation on database */
-			connection.close();
-		}
+			/*connection.close();
+		}*/
 	}
 	
 	public void closeConnection() throws SQLException{
