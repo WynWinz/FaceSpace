@@ -37,7 +37,7 @@ public class FaceSpaceDriver {
 					establishFriendship();
 					break;
 				case 13:
-					demo();
+					runDemo();
 					break;
 				case 14:
 					System.out.println("Goodbye");
@@ -49,7 +49,6 @@ public class FaceSpaceDriver {
 	}
 
 	private static void createUser() throws SQLException {
-		//System.out.println("You chose create user.");
 		String fname = promptString("Enter your first name");
 		String lname = promptString("Enter your last name");
 		String email = promptString("Enter your email");
@@ -69,8 +68,20 @@ public class FaceSpaceDriver {
 		fs.establishFriendship(profileID, friendID);		
 	}
 
-	private static void demo() throws SQLException {
-		System.out.println("You chose to demo the project");
+	private static void runDemo() throws SQLException {
+		String fname = "Josh";
+		String lname = "Grant";
+		String email = "j.grant@gmail.com";
+		String dateOfBirth = "1996-04-17";
+		fs.createUser(fname, lname, email, dateOfBirth);
+
+		fname = "Kevin";
+		lname = "James";
+		email = "funnyman12@yahoo.com";
+		dateOfBirth = "1974-10-22";
+		fs.createUser(fname, lname, email, dateOfBirth);
+
+		
 	}
 
 	private static int getOption() {

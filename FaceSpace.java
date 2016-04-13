@@ -8,9 +8,9 @@
  * 4/9/16
 */
 
-import java.sql.*;  		//import the file containing definitions for the parts
+import java.sql.*;
 import java.text.ParseException;
-import oracle.jdbc.*;		//needed by java for database connection and manipulation
+import oracle.jdbc.*;
 import java.util.Date;
 import java.text.*;
 import java.util.Calendar;
@@ -34,7 +34,6 @@ public class FaceSpace {
 
 		Date dNow = new Date();
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		//System.out.println(ft.format(dNow));
 
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
@@ -58,29 +57,8 @@ public class FaceSpace {
 			connection.commit();
 			System.out.println("Profile Added.");
 			Thread.sleep(1000);
-			
-			/*
-		    int result = statement.executeUpdate(query); 
-	    
-		    //sleep for 5 seconds, so that we have time to switch to the other transaction
-		    Thread.sleep(5000);
-	    
-		    query ="select * from CLASS";
-		    ResultSet resultSet =statement.executeQuery(query);
-	    	System.out.println("ClassID\tMAX_NUM_STUDENTS\tCUR_NUM_STUDENTS");
-	  	  while(resultSet.next())
-	  	  {
-	 	   	System.out.println(resultSet.getLong(1)+"\t"+resultSet.getLong(2)+"\t"+resultSet.getDouble(3));
-	 	   }
-	    
-	    /*
-	     * Releases this ResultSet object's database and JDBC resources immediately instead of waiting for this to happen when it is automatically closed.
-	     */
+
 		    resultSet.close();
-		    //now rollback to end the transaction and release the lock on data. 
-	    	//You can use connection.commit() instead for this example, I just don't want to change the value
-	  	 // connection.rollback();
-	  	  //System.out.println("Transaction Rolled Back!");
 		}	
 		catch(Exception Ex)  
 		{
