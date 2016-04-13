@@ -49,7 +49,7 @@ public class FaceSpace {
 			maxID++;
 		    query = "INSERT INTO PROFILES (profile_ID, fname, lname, email, DOB, lastLogin) VALUES ("+maxID+",'"+fname+"','"+lname+"','"+email+"', DATE '"+dob+"', TIMESTAMP '"+today.getTime()+"');";				
 			int result = statement.executeUpdate(query);
-			thread.sleep(5000);
+			Thread.sleep(5000);
 			/*
 		    int result = statement.executeUpdate(query); 
 	    
