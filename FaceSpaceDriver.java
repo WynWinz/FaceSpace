@@ -56,19 +56,19 @@ public class FaceSpaceDriver {
 		fs.createUser(fname, lname, email, dateOfBirth);
 	}
 
-	private static void initiateFriendship() {
+	private static void initiateFriendship() throws SQLException {
 		int profileID = promptInt("Enter your profile ID");
 		int friendID = promptInt("Enter your friend's ID");
 		fs.initiateFriendship(profileID, friendID);
 	}
 
-	private static void establishFriendship() {
+	private static void establishFriendship() throws SQLException {
 		int profileID = promptInt("Enter your profile ID");
 		int friendID = promptInt("Enter your friend's ID");
 		fs.establishFriendship(profileID, friendID);		
 	}
 
-	private static void demo() {
+	private static void demo() throws SQLException {
 		System.out.println("You chose to demo the project");
 	}
 
