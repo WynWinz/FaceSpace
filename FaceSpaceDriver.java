@@ -17,8 +17,8 @@ public class FaceSpaceDriver {
 	private static FaceSpace fs;
 	private static Scanner in = new Scanner(System.in);
 
-	public static void main(String[] args) throws SQLException{
-		//fs = new FaceSpace();
+	public static void main(String[] args) throws SQLException {
+		fs = new FaceSpace();
 		run();	
 	}
 
@@ -48,7 +48,12 @@ public class FaceSpaceDriver {
 	}
 
 	private static void createUser() {
-		System.out.println("You chose create user.");
+		//System.out.println("You chose create user.");
+		String fname = promptString("Enter your first name");
+		String lname = promptString("Enter your last name");
+		String email = promptString("Enter your email");
+		String dateOfBirth = promptString("Enter your date of birth (YYYY-MM-DD)");
+		fs.createUser(fname, lname, email, dateOfBirth);
 	}
 
 	private static void initiateFriendship() {
