@@ -27,7 +27,7 @@ public class FaceSpace {
 		setupDatabase();
 	}
 	
-	public void createUser(String name, String email, String dob){
+	public void createUser(String name, String email, String dob) throws SQLException{
 
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
