@@ -40,6 +40,7 @@ CREATE TABLE Friends (
 	dateEstablished	date,
 	CONSTRAINT PK_Friends PRIMARY KEY (profile_ID, friend_ID),
 	CONSTRAINT FK_FriendsToProfiles FOREIGN KEY (profile_ID) REFERENCES Profiles(profile_ID)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Groups (
@@ -55,8 +56,10 @@ CREATE TABLE Members (
 	group_ID 	number(10),
 	profile_ID	number(10),
 	CONSTRAINT PK_Members PRIMARY KEY (group_ID, profile_ID),
-	CONSTRAINT FK_MembersToGroups FOREIGN KEY (group_ID) REFERENCES Groups(group_ID),
+	CONSTRAINT FK_MembersToGroups FOREIGN KEY (group_ID) REFERENCES Groups(group_ID)
+		ON DELETE CASCADE,
 	CONSTRAINT FK_MembersToProfiles FOREIGN KEY (profile_ID) REFERENCES Profiles(profile_ID)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Messages (
@@ -67,6 +70,8 @@ CREATE TABLE Messages (
 	msgText			varchar2(100),
 	timeSent		timestamp,
 	CONSTRAINT PK_Messages PRIMARY KEY (msg_ID),
-	CONSTRAINT FK_Sender FOREIGN KEY (sender_ID) REFERENCES Profiles(profile_ID),
+	CONSTRAINT FK_Sender FOREIGN KEY (sender_ID) REFERENCES Profiles(profile_ID)
+		ON DELETE CASCADE,
 	CONSTRAINT FK_Recipient FOREIGN KEY (recipient_ID) REFERENCES Profiles(profile_ID)
+		ON DELETE CASCADE
 );

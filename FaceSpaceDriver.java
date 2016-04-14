@@ -69,15 +69,20 @@ public class FaceSpaceDriver {
 	}
 
 	private static void runDemo() throws SQLException {
+		ArrayList<String> emails = new ArrayList<String>();
+		emails.add("j.grant@gmail.com");
+		emails.add("funnyman12@yahoo.com");
+		fs.setupDemo(emails);
+
 		String fname = "Josh";
 		String lname = "Grant";
-		String email1 = "j.grant@gmail.com";
+		String email1 = emails.get(0);
 		String dateOfBirth = "1996-04-17";
 		fs.createUser(fname, lname, email1, dateOfBirth);
 
 		fname = "Kevin";
 		lname = "James";
-		String email2 = "funnyman12@yahoo.com";
+		String email2 = emails.get(1);
 		dateOfBirth = "1974-10-22";
 		fs.createUser(fname, lname, email2, dateOfBirth);
 

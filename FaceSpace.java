@@ -14,6 +14,7 @@ import oracle.jdbc.*;
 import java.util.Date;
 import java.text.*;
 import java.util.Calendar;
+import java.util.*;
 
 public class FaceSpace {
 	
@@ -314,23 +315,27 @@ public class FaceSpace {
 	    }
 	}
 	
-	public void setupDemo(ArrayList<String> emails){
+	public void setupDemo(ArrayList<String> emails) throws SQLException {
 		
 		connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	   	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 	    statement = connection.createStatement();
+	    ResultSet resultSet = null;
 	
-		for(String e : email){
+		for(String e : emails){
 			
 			query = "SELECT profile_ID FROM profiles WHERE email = '"+ e +"' ";
-	    	ResultSet resultSet =statement.executeQuery(query);
+	    	resultSet =statement.executeQuery(query);
 			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
-				int profID = resultSet.getInt(1);
-	 	   		query = "DELETE FROM profiles WHERE profile_ID = "+profID;
-		 	   	int result = statement.executeUpdate(query);	
+	  			while(resultSet.next()) {
+					int profID = resultSet.getInt(1);
+		 	   		query = "DELETE FROM profiles WHERE profile_ID = "+profID;
+			 	   	int result = statement.executeUpdate(query);
+		 	   	}	
 	 	   	}	
 		}
+		resultSet.close();
  	   	connection.commit();		
 		
 	}
