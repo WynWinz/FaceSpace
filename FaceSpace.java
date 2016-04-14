@@ -314,6 +314,27 @@ public class FaceSpace {
 	    }
 	}
 	
+	public void setupDemo(ArrayList<String> emails){
+		
+		connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	   	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	    statement = connection.createStatement();
+	
+		for(String e : email){
+			
+			query = "SELECT profile_ID FROM profiles WHERE email = '"+ e +"' ";
+	    	ResultSet resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+				int profID = resultSet.getInt(1);
+	 	   		query = "DELETE FROM profiles WHERE profile_ID = "+profID;
+		 	   	int result = statement.executeUpdate(query);	
+	 	   	}	
+		}
+ 	   	connection.commit();		
+		
+	}
+	
 }
 
 
