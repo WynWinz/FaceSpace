@@ -134,6 +134,61 @@ public class FaceSpace {
 	}
 	
 	public void establishFriendship(int profileID, int friendID) throws SQLException{
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 1);
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String todaysDate = format1.format(cal.getTime());
+		
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+			
+			//check to make sure the friendship does not already exist
+	    	query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+profileID+" AND friend_ID = "+friendID;
+	    	ResultSet resultSet =statement.executeQuery(query);
+			boolean alreadyExists = false;
+			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+				alreadyExists = true;
+	 	   	}
+			//check to make sure friendship does not already exist
+			query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+friendID+" AND friend_ID = "+profileID;
+	    	resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst() && alreadyExists == false)			//returns true if there is data in result set
+	  		{
+				alreadyExists = true;
+	 	   	}
+			
+			//if it does exist, update it
+			if(alreadyExists != false){
+			    query = "UPDATE Friends SET established = 1, dateEstablished= DATE '"+todaysDate+"' WHERE profile_ID =" +profileID+ "AND friend_ID ="+friendID;				
+				int result = statement.executeUpdate(query);
+				connection.commit();
+				System.out.println();
+				System.out.println("Friendship confirmed");
+				Thread.sleep(1000);
+			}
+			else{
+				System.out.println();
+				System.out.println("Friendship isn't pending -- please request friendship using initiate friendship");
+			}
+			
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}	
+		
 		
 	}
 	
