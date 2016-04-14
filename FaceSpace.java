@@ -155,7 +155,7 @@ public class FaceSpace {
 		
 	}
 	
-	public void establishFriendship(String friendEmail, String userEmail) throws SQLException{
+	public void establishFriendship(String userEmail, String friendEmail) throws SQLException{
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
@@ -209,6 +209,11 @@ public class FaceSpace {
 			    query = "UPDATE Friends SET established = 1, dateEstablished= DATE '"+todaysDate+"' WHERE profile_ID =" +profileID+ "AND friend_ID ="+friendID;				
 				int result = statement.executeUpdate(query);
 				connection.commit();
+
+				query = "UPDATE Friends SET established = 1, dateEstablished= DATE '"+todaysDate+"' WHERE profile_ID =" +friendID+ "AND friend_ID ="+profileID;				
+				result = statement.executeUpdate(query);
+				connection.commit();
+
 				System.out.println();
 				System.out.println(userEmail + "'s friendship with " + friendEmail + " confirmed");
 				Thread.sleep(1000);
