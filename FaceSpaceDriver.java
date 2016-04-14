@@ -71,17 +71,18 @@ public class FaceSpaceDriver {
 	private static void runDemo() throws SQLException {
 		String fname = "Josh";
 		String lname = "Grant";
-		String email = "j.grant@gmail.com";
+		String email1 = "j.grant@gmail.com";
 		String dateOfBirth = "1996-04-17";
-		fs.createUser(fname, lname, email, dateOfBirth);
+		fs.createUser(fname, lname, email1, dateOfBirth);
 
 		fname = "Kevin";
 		lname = "James";
-		email = "funnyman12@yahoo.com";
+		String email2 = "funnyman12@yahoo.com";
 		dateOfBirth = "1974-10-22";
-		fs.createUser(fname, lname, email, dateOfBirth);
+		fs.createUser(fname, lname, email2, dateOfBirth);
 
-
+		fs.initiateFriendship(email1, email2);
+		fs.establishFriendship(email2, email1);
 	}
 
 	private static int getOption() {
