@@ -74,21 +74,42 @@ public class FaceSpace {
 		
 	}
 
-	public void initiateFriendship(int profileID, int friendID) throws SQLException{
+	public void initiateFriendship(String userEmail, String friendEmail) throws SQLException{
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		String todaysDate = format1.format(cal.getTime());
+		int profileID = 0, friendID = 0;
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 			
+			query = 	"SELECT profile_ID "
+						+"FROM Profiles "
+						+"WHERE email = '"+ userEmail +"'";
+
+			ResultSet resultSet = statement.executeQuery(query);
+			while(resultSet.next())
+	  		{
+				profileID = resultSet.getInt(1);
+	 	   	}
+
+			query = 	"SELECT profile_ID "
+						+"FROM Profiles "
+						+"WHERE email = '"+ friendEmail +"'";
+
+			resultSet = statement.executeQuery(query);
+			while(resultSet.next())
+	  		{
+				friendID = resultSet.getInt(1);
+	 	   	}			
+
 			//check to make sure the friendship does not already exist
 	    	query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+profileID+" AND friend_ID = "+friendID;
-	    	ResultSet resultSet =statement.executeQuery(query);
+	    	resultSet =statement.executeQuery(query);
 			boolean alreadyExists = false;
 			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -108,7 +129,7 @@ public class FaceSpace {
 				int result = statement.executeUpdate(query);
 				connection.commit();
 				System.out.println();
-				System.out.println("Friendship pending");
+				System.out.println(userEmail + "'s friendship with " + friendEmail + " now pending");
 				Thread.sleep(1000);
 			}
 			else{
@@ -133,21 +154,42 @@ public class FaceSpace {
 		
 	}
 	
-	public void establishFriendship(int profileID, int friendID) throws SQLException{
+	public void establishFriendship(String userEmail, String friendEmail) throws SQLException{
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		String todaysDate = format1.format(cal.getTime());
+		int profileID = 0, friendID = 0;
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 			
+		    query = 	"SELECT profile_ID "
+						+"FROM Profiles "
+						+"WHERE email = '"+ userEmail +"'";
+
+			ResultSet resultSet = statement.executeQuery(query);
+			while(resultSet.next())
+	  		{
+				profileID = resultSet.getInt(1);
+	 	   	}
+
+			query = 	"SELECT profile_ID "
+						+"FROM Profiles "
+						+"WHERE email = '"+ friendEmail +"'";
+
+			resultSet = statement.executeQuery(query);
+			while(resultSet.next())
+	  		{
+				friendID = resultSet.getInt(1);
+	 	   	}
+
 			//check to make sure the friendship does not already exist
 	    	query = "SELECT profile_ID FROM Friends WHERE profile_ID = "+profileID+" AND friend_ID = "+friendID;
-	    	ResultSet resultSet =statement.executeQuery(query);
+	    	resultSet =statement.executeQuery(query);
 			boolean alreadyExists = false;
 			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -167,7 +209,7 @@ public class FaceSpace {
 				int result = statement.executeUpdate(query);
 				connection.commit();
 				System.out.println();
-				System.out.println("Friendship confirmed");
+				System.out.println(userEmail + "'s friendship with " + friendEmail + " confirmed");
 				Thread.sleep(1000);
 			}
 			else{

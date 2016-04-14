@@ -57,15 +57,15 @@ public class FaceSpaceDriver {
 	}
 
 	private static void initiateFriendship() throws SQLException {
-		int profileID = promptInt("Enter your profile ID");
-		int friendID = promptInt("Enter your friend's ID");
-		fs.initiateFriendship(profileID, friendID);
+		String userEmail = promptString("Enter your email");
+		String friendEmail = promptString("Enter your friend's email");
+		fs.initiateFriendship(userEmail, friendEmail);
 	}
 
-	private static void establishFriendship() throws SQLException {
-		int profileID = promptInt("Enter your profile ID");
-		int friendID = promptInt("Enter your friend's ID");
-		fs.establishFriendship(profileID, friendID);		
+	private static void establishFriendship() throws SQLException {	
+		String userEmail = promptString("Enter your email");
+		String friendEmail = promptString("Enter your friend's email");
+		fs.establishFriendship(userEmail, friendEmail);	
 	}
 
 	private static void runDemo() throws SQLException {
@@ -81,7 +81,7 @@ public class FaceSpaceDriver {
 		dateOfBirth = "1974-10-22";
 		fs.createUser(fname, lname, email, dateOfBirth);
 
-		
+
 	}
 
 	private static int getOption() {
