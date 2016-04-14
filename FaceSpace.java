@@ -155,7 +155,7 @@ public class FaceSpace {
 		
 	}
 	
-	public void establishFriendship(String userEmail, String friendEmail) throws SQLException{
+	public void establishFriendship(String friendEmail, String userEmail) throws SQLException{
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
