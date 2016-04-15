@@ -240,7 +240,68 @@ public class FaceSpace {
 		
 	}
 	
-	public void displayFriends(int profileID) throws SQLException{
+	public void displayFriends(String email) throws SQLException{
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+			
+	    	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+email+"'";
+	    	ResultSet resultSet =statement.executeQuery(query);    
+			int profileID = -1;
+			String profileFName=null, profileLName=null;
+			while(resultSet.next())
+	  		{
+				profileID = resultSet.getInt(1);
+				profileFName = resultSet.getString(2).trim();		//remove whitespace on names
+				profileLName = resultSet.getString(3).trim();
+	 	   	}
+			
+			ArrayList<Integer> friendIDs = new ArrayList<Integer>();
+			
+			query = "SELECT friend_ID FROM friends WHERE profile_ID = "+profileID;
+			resultSet =statement.executeQuery(query);    
+			while(resultSet.next())
+	  		{
+				friendIDs.add(resultSet.getInt(1));
+	 	   	}	
+			
+			query = "SELECT profile_ID FROM friends WHERE friend_ID = "+profileID;
+			resultSet =statement.executeQuery(query);    
+			while(resultSet.next())
+	  		{
+				friendIDs.add(resultSet.getInt(1));
+	 	   	}
+			System.out.println();
+			System.out.println(profileFName+" "+profileLName+"'s friends: ");
+			for(int i=0; i<friendIDs.size(); i++){
+				query = "SELECT fname, lname, email FROM profiles WHERE profile_ID = "+friendIDs.get(i);
+				resultSet =statement.executeQuery(query);    
+				while(resultSet.next())
+		  		{
+					System.out.println((i+1)+". "+resultSet.getString(1) + " " +resultSet.getString(2) + "email: "+resultSet.getString(3));
+	 	   		}
+				
+			}
+
+
+			Thread.sleep(1000);
+
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}	
+	
+	
 	
 	}
 	

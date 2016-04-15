@@ -36,6 +36,9 @@ public class FaceSpaceDriver {
 				case 3: 
 					establishFriendship();
 					break;
+				case 4:
+					displayFriends();
+					break;
 				case 13:
 					runDemo();
 					break;
@@ -66,6 +69,11 @@ public class FaceSpaceDriver {
 		String userEmail = promptString("Enter your email");
 		String friendEmail = promptString("Enter your friend's email");
 		fs.establishFriendship(userEmail, friendEmail);	
+	}
+
+	private static void displayFriends() throws SQLException {
+		String userEmail = promptString("Enter your email");
+		fs.displayFriends(userEmail);
 	}
 
 	private static void runDemo() throws SQLException {
@@ -101,6 +109,7 @@ public class FaceSpaceDriver {
 		System.out.println("1. Create a user");
 		System.out.println("2. Initiate a friendship");
 		System.out.println("3. Establish a friendship");
+		System.out.println("4. display friends");
 		System.out.println("13. Demo all functions");
 		System.out.println("14. Exit");
 		System.out.println();
