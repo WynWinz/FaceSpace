@@ -72,6 +72,7 @@ public class FaceSpaceDriver {
 		ArrayList<String> emails = new ArrayList<String>();
 		emails.add("j.grant@gmail.com");
 		emails.add("funnyman12@yahoo.com");
+		emails.add("wilber33@hotmail.com");
 		fs.setupDemo(emails);
 
 		String fname = "Josh";
@@ -88,6 +89,15 @@ public class FaceSpaceDriver {
 
 		fs.initiateFriendship(email1, email2);
 		fs.establishFriendship(email2, email1);
+
+		fname = "Elijah";
+		lname = "Wood";
+		String email3 = emails.get(2);
+		dateOfBirth = "1977-06-15";
+		fs.createUser(fname, lname, email3, dateOfBirth);
+
+		fs.initiateFriendship(email3, email2);
+		fs.establishFriendship(email2, email3);
 	}
 
 	private static int getOption() {
