@@ -56,7 +56,7 @@ public class FaceSpace {
 			int result = statement.executeUpdate(query);
 
 			connection.commit();
-			System.out.println("Profile Added.");
+			System.out.println("Profile added for: " + fname + " " + lname + ", ID: " + maxID);
 			Thread.sleep(1000);
 
 		    resultSet.close();
