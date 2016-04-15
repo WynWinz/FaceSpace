@@ -56,7 +56,7 @@ public class FaceSpace {
 			int result = statement.executeUpdate(query);
 
 			connection.commit();
-			System.out.println("Profile added for: " + fname + " " + lname + ", ID: " + maxID);
+			System.out.println("Profile Added.");
 			Thread.sleep(1000);
 
 		    resultSet.close();
@@ -306,11 +306,125 @@ public class FaceSpace {
 	}
 	
 	public void createGroup(String name, String description, int memLimit) throws SQLException{
-	
+		
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+
+			query = "SELECT groupName FROM Groups WHERE groupName = '"+name+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("Group name already taken.");
+				return;
+	 	   	}
+
+	    	query = "SELECT MAX(group_ID) FROM groups";
+	    	ResultSet resultSet =statement.executeQuery(query);
+	    
+			int maxID = -1;
+			while(resultSet.next())
+	  		{
+				maxID = resultSet.getInt(1);
+	 	   	}
+			maxID++;
+
+		    query = "INSERT INTO Groups (group_ID,groupName,description,memberLimit,numMembers) VALUES ("+maxID+",'"+name+"','"+description+"',"+memLimit+",0)";				
+			int result = statement.executeUpdate(query);
+
+			connection.commit();
+			System.out.println("Group created.");
+			Thread.sleep(1000);
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}	
+		
+		
 	}
 	
-	public void addToGroup(int profileID, String groupName) throws SQLException{
-		//check mem limit of group
+	public void addToGroup(String email, String groupName) throws SQLException{
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+
+			//Get group info and check membership limit
+			query = "SELECT group_ID, memberLimit, numMembers FROM Groups WHERE groupName = '"+groupName+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("A group with this name does not exist.");
+				return;
+	 	   	}
+			int groupID=-1, memLimit=-1, numMembers=-1, profileID=-1;
+			
+			while(resultSet.next())
+	  		{
+				groupID = resultSet.getInt(1);
+				memLimit = resultSet.getInt(2);
+				numMembers = resultSet.getInt(3);
+	 	   	}
+			
+			if(memLimit == numMembers){
+				System.out.println();
+				System.out.println("Sorry, this group is full.");
+				return;
+			}
+
+			//Get member info
+			query = "SELECT profile_ID FROM profiles WHERE email = '"+email+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("User with that email does not exist.");
+				return;
+	 	   	}
+			while(resultSet.next()){
+				profileID = resultSet.getInt(1);
+			}
+			
+			//Insert member into group
+		    query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
+			int result = statement.executeUpdate(query);
+
+			//increment group number of members
+			numMembers++;
+			query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
+			result = statement.executeUpdate(query);
+
+			connection.commit();
+			System.out.println("Member added.");
+			Thread.sleep(1000);
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}	
+		
+		
+		
 		
 	}
 	

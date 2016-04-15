@@ -39,6 +39,12 @@ public class FaceSpaceDriver {
 				case 4:
 					displayFriends();
 					break;
+				case 5:
+					createGroup();
+					break;
+				case 6:
+					addToGroup();
+					break;
 				case 13:
 					runDemo();
 					break;
@@ -75,12 +81,24 @@ public class FaceSpaceDriver {
 		String userEmail = promptString("Enter your email");
 		fs.displayFriends(userEmail);
 	}
+	
+	private static void createGroup() throws SQLException {
+		String name = promptString("Enter a group name");
+		String description = promptString("Enter a group description");
+		int memLimit = promptInt("Enter a membership limit");
+		fs.createGroup(name, description, memLimit);
+	}
+	
+	private static void addToGroup() throws SQLException {
+		String email = promptString("Enter your email");
+		String groupName = promptString("Enter the group name");
+		fs.addToGroup(email, groupName);
+	}
 
 	private static void runDemo() throws SQLException {
 		ArrayList<String> emails = new ArrayList<String>();
 		emails.add("j.grant@gmail.com");
 		emails.add("funnyman12@yahoo.com");
-		emails.add("wilber33@hotmail.com");
 		fs.setupDemo(emails);
 
 		String fname = "Josh";
@@ -97,15 +115,6 @@ public class FaceSpaceDriver {
 
 		fs.initiateFriendship(email1, email2);
 		fs.establishFriendship(email2, email1);
-
-		fname = "Elijah";
-		lname = "Wood";
-		String email3 = emails.get(2);
-		dateOfBirth = "1977-06-15";
-		fs.createUser(fname, lname, email3, dateOfBirth);
-
-		fs.initiateFriendship(email3, email2);
-		fs.establishFriendship(email2, email3);
 	}
 
 	private static int getOption() {
@@ -119,7 +128,9 @@ public class FaceSpaceDriver {
 		System.out.println("1. Create a user");
 		System.out.println("2. Initiate a friendship");
 		System.out.println("3. Establish a friendship");
-		System.out.println("4. display friends");
+		System.out.println("4. Display friends");
+		System.out.println("5. Create group");
+		System.out.println("6. Add to group");
 		System.out.println("13. Demo all functions");
 		System.out.println("14. Exit");
 		System.out.println();
