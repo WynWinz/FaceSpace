@@ -421,18 +421,159 @@ public class FaceSpace {
 			} catch (SQLException e) {
 				System.out.println("Cannot close Statement. Machine error: "+e.toString());
 			}
+		}			
+		
+	}
+	
+	public void sendMessageToUser(String userEmail, String recipientEmail, String subject, String body) throws SQLException{
+		Date dNow = new Date();
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+
+			int msgID = 1;
+			//Get group info and check membership limit
+			query = "SELECT MAX(msg_ID) FROM Messages";
+	    	resultSet = statement.executeQuery(query);
+			
+			while(resultSet.next())
+	  		{
+				msgId = resultSet.getInt(1);
+	 	   	}
+			
+			int userID = -1, recipientID = -1;
+			
+			//Get member info
+			query = "SELECT profile_ID FROM profiles WHERE email = '"+userEmail+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("User with sender's email does not exist.");
+				return;
+	 	   	}
+			while(resultSet.next()){
+				userID = resultSet.getInt(1);
+			}
+			
+			query = "SELECT profile_ID FROM profiles WHERE email = '"+recipientEmail+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("User with recipient's email does not exist.");
+				return;
+	 	   	}
+			while(resultSet.next()){
+				recipientID = resultSet.getInt(1);
+			}
+			
+			//Insert message into messges
+		    query = "INSERT INTO Messages (msg_ID,sender_ID,recipient_ID,subject,msgText,timeSent) VALUES("+msgID+","+userID+","+recipientID+",'"+subject+"','"+body+"', TIMESTAMP '"+ft.format(dNow)+"')";
+			int result = statement.executeUpdate(query);
+
+			connection.commit();
+			System.out.println("Message Sent.");
+			Thread.sleep(1000);
+		    resultSet.close();
 		}	
-		
-		
-		
-		
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}
+	
 	}
 	
-	public void sendMessageToUser(String subject, String body, int recipientID, int senderID) throws SQLException{
+	public void displayMessages(String userEmail) throws SQLException{
 	
-	}
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+		
+			ArrayList<Integer> senderIDs = new ArrayList<Integer>();
+			ArrayList<String> subjects = new ArrayList<String>();
+			ArrayList<String> texts = new ArrayList<String>();
+			ArrayList<String> times = new ArrayList<String>();
+			
+			int userID = -1;
+			
+			//Get user info
+			query = "SELECT profile_ID FROM profiles WHERE email = '"+userEmail+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("User that email does not exist.");
+				return;
+	 	   	}
+			while(resultSet.next()){
+				userID = resultSet.getInt(1);
+			}
+			
+			//get messages info
+			query = "SELECT sender_ID, subject, msgText, timeSent FROM messages WHERE recipient_ID = '"+userEmail+"'";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("This user does not have any messages.");
+				return;
+	 	   	}
+			while(resultSet.next()){
+				senderIDs.add(resultSet.getInt("sender_ID"));
+				subjects.add(resultSet.getString("subject"));
+				texts.add(resultSet.getString("msgText"));
+				times.add(resultSet.getString("timeSent"));
+			}
+			
+			//get sender names and print messages
+			for(int i=0; i<senderIDs.size(); i++){
+				query = "SELECT fname, lname FROM profiles WHERE profile_ID = "+senderIDs.get(i);
+				resultSet =statement.executeQuery(query);
+				String senderFName = null, senderLName = null;
+				while(resultSet.next()){
+					senderFName = resultSet.getString("fname");
+					senderLName = resultSet.getString("lname");
+				}
+				System.out.println();
+				System.out.println("Message "+i+": ");
+				System.out.println("From: "+senderFName+" "+senderLName);
+				System.out.println("Subject: "+subjects.get(i));
+				System.out.println("Body: "+texts.get(i));
+				System.out.println("Time sent: "+times.get(i));
+			}
+
+
+
+			connection.commit();
+			Thread.sleep(1000);
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}
 	
-	public void displayMessages(int profileID) throws SQLException{
+	
 	
 	}
 	

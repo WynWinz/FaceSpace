@@ -45,6 +45,12 @@ public class FaceSpaceDriver {
 				case 6:
 					addToGroup();
 					break;
+				case 7: 
+					sendMessageToUser();
+					break;
+				case 8: 
+					displayMessages();
+					break;
 				case 13:
 					runDemo();
 					break;
@@ -67,7 +73,7 @@ public class FaceSpaceDriver {
 
 	private static void initiateFriendship() throws SQLException {
 		String userEmail = promptString("Enter your email");
-		String friendEmail = promptString("Enter your friend's email");
+		String friendEmail = promptString("Enter your friend's email"); worewifjhasdklfhsadfwofh
 		fs.initiateFriendship(userEmail, friendEmail);
 	}
 
@@ -93,6 +99,19 @@ public class FaceSpaceDriver {
 		String email = promptString("Enter your email");
 		String groupName = promptString("Enter the group name");
 		fs.addToGroup(email, groupName);
+	}
+
+	private static void sendMessageToUser() throws SQLException {
+		String userEmail = promptString("Enter your email");
+		String recipientEmail = promptString("Enter recipient's email");
+		String subject = promptString("Enter the message subject");
+		String body = promptString("Enter the message body");
+		fs.sendMessageToUser(userEmail, recipientEmail, subject, body);
+	}
+	
+	private static void displayMessages() throws SQLException {
+		String userEmail = promptString("Enter your email");
+		fs.displayMessages(userEmail);
 	}
 
 	private static void runDemo() throws SQLException {
