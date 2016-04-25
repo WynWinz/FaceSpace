@@ -76,13 +76,13 @@ CREATE TABLE Messages (
 		ON DELETE CASCADE
 );
 
-CREATE OR REPLACE TRIGGER CheckGroupSize
-	BEFORE INSERT ON Groups
-	REFERENCING NEW as newRow
-FOR EACH ROW
-BEGIN
-	IF :newRow.numMembers >= :newRow.memberLimit THEN
-		rollback;
-	END IF;
-END;
-/
+--CREATE OR REPLACE TRIGGER CheckGroupSize
+--	AFTER INSERT OR UPDATE ON Groups
+--	REFERENCING NEW as newRow
+--FOR EACH ROW
+--BEGIN
+--	IF :newRow.numMembers > :newRow.memberLimit THEN
+--		rollback;
+--	END IF;
+--END;
+--/

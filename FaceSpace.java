@@ -443,6 +443,7 @@ public class FaceSpace {
 	  		{
 				msgID = resultSet.getInt(1);
 	 	   	}
+	 	   	msgID++;
 			
 			int userID = -1, recipientID = -1;
 			
@@ -522,7 +523,7 @@ public class FaceSpace {
 			}
 			
 			//get messages info
-			query = "SELECT sender_ID, subject, msgText, timeSent FROM messages WHERE recipient_ID = '"+userEmail+"'";
+			query = "SELECT sender_ID, subject, msgText, timeSent FROM messages WHERE recipient_ID = '"+userID+"'";
 	    	resultSet =statement.executeQuery(query);
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -547,14 +548,12 @@ public class FaceSpace {
 					senderLName = resultSet.getString("lname");
 				}
 				System.out.println();
-				System.out.println("Message "+i+": ");
+				System.out.println("Message "+(i+1)+": ");
 				System.out.println("From: "+senderFName+" "+senderLName);
 				System.out.println("Subject: "+subjects.get(i));
 				System.out.println("Body: "+texts.get(i));
 				System.out.println("Time sent: "+times.get(i));
 			}
-
-
 
 			connection.commit();
 			Thread.sleep(1000);
@@ -635,13 +634,14 @@ public class FaceSpace {
 	    }
 	}
 	
-	public void setupDemo(ArrayList<String> emails) throws SQLException {
+	public void setupDemo(ArrayList<String> emails, String groupName, ArrayList<String> subjects) throws SQLException {
 		
 		connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	   	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 	    statement = connection.createStatement();
 	    ResultSet resultSet = null;
 	
+		//clear demo profiles
 		for(String e : emails){
 			
 			query = "SELECT profile_ID FROM profiles WHERE email = '"+ e +"' ";
@@ -655,6 +655,29 @@ public class FaceSpace {
 		 	   	}	
 	 	   	}	
 		}
+
+		//clear demo group
+		query = "SELECT group_ID FROM Groups WHERE groupName = '" + groupName + "' ";
+		resultSet = statement.executeQuery(query);
+		while(resultSet.next()) {
+			int groupID = resultSet.getInt(1);
+			query = "DELETE FROM Groups WHERE group_ID = " + groupID;
+			int result = statement.executeUpdate(query);
+		}
+
+		//clear demo messages
+		for(String s : subjects) {
+			query = "SELECT msg_ID FROM Messages WHERE subject = '" + s + "' ";	
+			resultSet = statement.executeQuery(query);
+			if(resultSet.isBeforeFirst()) {
+				while(resultSet.next()) {
+					int msgID = resultSet.getInt(1);
+					query = "DELETE FROM Messages WHERE msg_ID = " +msgID;
+					int result = statement.executeUpdate(query);
+				}
+			}
+		}	
+
 		resultSet.close();
  	   	connection.commit();		
 		

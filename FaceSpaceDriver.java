@@ -119,7 +119,11 @@ public class FaceSpaceDriver {
 		emails.add("j.grant@gmail.com");
 		emails.add("funnyman12@yahoo.com");
 		emails.add("wynwinz@hotmail.com");
-		fs.setupDemo(emails);
+		String groupName = "CS Juniors";
+		ArrayList<String> subjects = new ArrayList<String>();
+		subjects.add("Long Time");
+		subjects.add("Concert");
+		fs.setupDemo(emails, groupName, subjects);
 
 		String fname = "Josh";
 		String lname = "Grant";
@@ -136,13 +140,41 @@ public class FaceSpaceDriver {
 		fs.initiateFriendship(email1, email2);
 		fs.establishFriendship(email2, email1);
 
+		fname = "Wyn";
+		lname = "Mellett";
 		String email3 = emails.get(2);
+		dateOfBirth = "1994-03-06";
+		fs.createUser(fname, lname, email3, dateOfBirth);
+
 
 		fs.initiateFriendship(email3, email2);
 		fs.establishFriendship(email2, email3);
 
 		fs.displayFriends(email1);
 		fs.displayFriends(email2);
+
+		
+		String description = "junior cs students at Pitt";
+		int memLimit = 25;
+		fs.createGroup(groupName, description, memLimit);
+
+		System.out.println("");
+
+		for(String email : emails) {
+			fs.addToGroup(email, groupName);
+		}
+
+		System.out.println("");
+
+		String subject = subjects.get(0);
+		String body = "Hi Kevin, how are you?";
+		fs.sendMessageToUser(email1, email2, subject, body);
+
+		subject = subjects.get(1);
+		body = "I have an extra ticket to the daft punk concert, you in?";
+		fs.sendMessageToUser(email3, email2, subject, body);
+
+		fs.displayMessages(email2);		
 	}
 
 	private static int getOption() {
