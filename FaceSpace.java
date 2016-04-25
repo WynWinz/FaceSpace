@@ -299,10 +299,7 @@ public class FaceSpace {
 			} catch (SQLException e) {
 				System.out.println("Cannot close Statement. Machine error: "+e.toString());
 			}
-		}	
-	
-	
-	
+		}		
 	}
 	
 	public void createGroup(String name, String description, int memLimit) throws SQLException{
@@ -576,7 +573,60 @@ public class FaceSpace {
 	}
 	
 	public void searchForUser(String userSearch) throws SQLException{
-	
+		//search areas: fname, lname, email, DOB
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+
+		    ArrayList<String> names = new ArrayList<String>();
+		    String search[] = userSearch.split(" ");
+		    StringBuilder fullName = new StringBuilder();
+
+		    String searchAreas[] = {"fname", "lname", "email", "DOB"};
+		    //search one keyword at a time
+		    for(int i = 0; i < search.length; i++) {
+		    	for(int j = 0; j < searchAreas.length; j++) {
+		    		String curSearch = searchAreas[j];
+			    	query = "SELECT fname, lname "
+			    			+ "FROM Profiles "
+			    			+ "WHERE " + curSearch +" LIKE '%"+ search[i] +"%'";
+			    	resultSet = statement.executeQuery(query);    
+					String profileFName=null, profileLName=null;
+					while(resultSet.next())
+			  		{
+						profileFName = resultSet.getString(1).trim();		//remove whitespace on names
+						profileLName = resultSet.getString(2).trim();
+						fullName.append(profileFName);
+						fullName.append(" ");
+						fullName.append(profileLName);
+						names.add(fullName.toString());
+						fullName.setLength(0);
+			 	   	}
+		 	   	}	
+		    }
+			
+	    	//print out names with some match
+	    	System.out.println("The following people had matches in a significant field:");
+	    	for(String n : names) {
+	    		System.out.println(n);
+	    	}
+			
+			connection.commit();
+			Thread.sleep(1000);
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}
 	}
 	
 	public void threeDegrees(int userA, int userB) throws SQLException{
