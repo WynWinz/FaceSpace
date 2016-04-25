@@ -24,7 +24,7 @@ DROP TABLE Messages CASCADE CONSTRAINTS;
 PURGE RECYCLEBIN;
 
 CREATE TABLE Profiles (
-	profile_ID	number(10),
+	profile_ID	integer,
 	fname		char(20),
 	lname 		char(20),
 	email 		char(50) UNIQUE,
@@ -34,8 +34,8 @@ CREATE TABLE Profiles (
 );
 
 CREATE TABLE Friends (
-	profile_ID		number(10),
-	friend_ID		number(10),
+	profile_ID		integer,
+	friend_ID		integer,
 	established 	integer, --0 or 1
 	dateEstablished	date,
 	CONSTRAINT PK_Friends PRIMARY KEY (profile_ID, friend_ID),
@@ -44,7 +44,7 @@ CREATE TABLE Friends (
 );
 
 CREATE TABLE Groups (
-	group_ID	number(10),
+	group_ID	integer,
 	groupName 	char(30) UNIQUE,
 	description	char(120),
 	memberLimit	integer,
@@ -53,8 +53,8 @@ CREATE TABLE Groups (
 );
 
 CREATE TABLE Members (
-	group_ID 	number(10),
-	profile_ID	number(10),
+	group_ID 	integer,
+	profile_ID	integer,
 	CONSTRAINT PK_Members PRIMARY KEY (group_ID, profile_ID),
 	CONSTRAINT FK_MembersToGroups FOREIGN KEY (group_ID) REFERENCES Groups(group_ID)
 		ON DELETE CASCADE,
@@ -63,9 +63,9 @@ CREATE TABLE Members (
 );
 
 CREATE TABLE Messages (
-	msg_ID			number(10),
-	sender_ID		number(10),
-	recipient_ID	number(10),
+	msg_ID			integer,
+	sender_ID		integer,
+	recipient_ID	integer,
 	subject			char(40),
 	msgText			varchar2(100),
 	timeSent		timestamp,
@@ -75,3 +75,14 @@ CREATE TABLE Messages (
 	CONSTRAINT FK_Recipient FOREIGN KEY (recipient_ID) REFERENCES Profiles(profile_ID)
 		ON DELETE CASCADE
 );
+
+CREATE OR REPLACE TRIGGER CheckGroupSize
+	BEFORE INSERT ON Groups
+	REFERENCING NEW as newRow
+FOR EACH ROW
+BEGIN
+	IF :newRow.numMembers >= :newRow.memberLimit THEN
+		rollback;
+	END IF;
+END;
+/

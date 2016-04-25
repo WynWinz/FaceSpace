@@ -349,9 +349,7 @@ public class FaceSpace {
 			} catch (SQLException e) {
 				System.out.println("Cannot close Statement. Machine error: "+e.toString());
 			}
-		}	
-		
-		
+		}			
 	}
 	
 	public void addToGroup(String email, String groupName) throws SQLException{
@@ -378,11 +376,12 @@ public class FaceSpace {
 				numMembers = resultSet.getInt(3);
 	 	   	}
 			
-			if(memLimit == numMembers){
+			//need to use trigger instead
+			/*if(memLimit == numMembers){
 				System.out.println();
 				System.out.println("Sorry, this group is full.");
 				return;
-			}
+			}*/
 
 			//Get member info
 			query = "SELECT profile_ID FROM profiles WHERE email = '"+email+"'";
@@ -442,7 +441,7 @@ public class FaceSpace {
 			
 			while(resultSet.next())
 	  		{
-				msgId = resultSet.getInt(1);
+				msgID = resultSet.getInt(1);
 	 	   	}
 			
 			int userID = -1, recipientID = -1;

@@ -56,7 +56,7 @@ public class FaceSpaceDriver {
 					break;
 				case 14:
 					System.out.println("Goodbye");
-					fs.closeConnection();;
+					fs.closeConnection();
 					System.exit(1);
 					break;
 			}
@@ -73,7 +73,7 @@ public class FaceSpaceDriver {
 
 	private static void initiateFriendship() throws SQLException {
 		String userEmail = promptString("Enter your email");
-		String friendEmail = promptString("Enter your friend's email"); worewifjhasdklfhsadfwofh
+		String friendEmail = promptString("Enter your friend's email");
 		fs.initiateFriendship(userEmail, friendEmail);
 	}
 
@@ -118,6 +118,7 @@ public class FaceSpaceDriver {
 		ArrayList<String> emails = new ArrayList<String>();
 		emails.add("j.grant@gmail.com");
 		emails.add("funnyman12@yahoo.com");
+		emails.add("wynwinz@hotmail.com");
 		fs.setupDemo(emails);
 
 		String fname = "Josh";
@@ -134,6 +135,14 @@ public class FaceSpaceDriver {
 
 		fs.initiateFriendship(email1, email2);
 		fs.establishFriendship(email2, email1);
+
+		String email3 = emails.get(2);
+
+		fs.initiateFriendship(email3, email2);
+		fs.establishFriendship(email2, email3);
+
+		fs.displayFriends(email1);
+		fs.displayFriends(email2);
 	}
 
 	private static int getOption() {
@@ -150,6 +159,8 @@ public class FaceSpaceDriver {
 		System.out.println("4. Display friends");
 		System.out.println("5. Create group");
 		System.out.println("6. Add to group");
+		System.out.println("7. Send message to user");
+		System.out.println("8. Display messages");
 		System.out.println("13. Demo all functions");
 		System.out.println("14. Exit");
 		System.out.println();
