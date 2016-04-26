@@ -51,6 +51,13 @@ public class FaceSpaceDriver {
 				case 8: 
 					displayMessages();
 					break;
+
+				case 11: 
+					topMessagers();
+					break;
+				case 12: 
+					dropUser();
+					break;
 				case 13:
 					runDemo();
 					break;
@@ -112,6 +119,21 @@ public class FaceSpaceDriver {
 	private static void displayMessages() throws SQLException {
 		String userEmail = promptString("Enter your email");
 		fs.displayMessages(userEmail);
+	}
+
+	private static void topMessagers() throws SQLException{
+		int numberOfUsers = promptInt("How mand top users would you like to see");
+		int months = promptInt("Enter the number of months you'd like you go back");
+		fs.topMessagers(numberOfUsers, months);
+		/*Display the top k users who have sent or received the highest number of messages during 
+		the past x months. x and k should be an input parameters to this function.
+		*/
+
+	}
+
+	private static void dropUser() throws SQLException{
+
+
 	}
 
 	private static void runDemo() throws SQLException {
@@ -193,6 +215,9 @@ public class FaceSpaceDriver {
 		System.out.println("6. Add to group");
 		System.out.println("7. Send message to user");
 		System.out.println("8. Display messages");
+
+		System.out.println("11. Top Messagers");
+		System.out.println("12. Drop User");
 		System.out.println("13. Demo all functions");
 		System.out.println("14. Exit");
 		System.out.println();

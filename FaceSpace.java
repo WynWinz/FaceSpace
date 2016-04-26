@@ -570,9 +570,6 @@ public class FaceSpace {
 				System.out.println("Cannot close Statement. Machine error: "+e.toString());
 			}
 		}
-	
-	
-	
 	}
 	
 	public void searchForUser(String userSearch) throws SQLException{
@@ -583,8 +580,115 @@ public class FaceSpace {
 	
 	}
 	
-	public void topMessagers() throws SQLException{
+	public void topMessagers(int numberofUsers, int months) throws SQLException{
+		/*Display the top k users who have sent or received the highest number of messages during 
+		the past x months. x and k should be an input parameters to this function.
+		*/
+	//generates current date -- then the date we are looking back to
+	try {
+
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		   	Date referenceDate = new Date();
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(referenceDate); 
+			c.add(Calendar.MONTH, (-months));
+
+			String dateTo = ft.format(c.getTime());
+
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+		
+			ArrayList<String> topSenders = new ArrayList<String>();
+			ArrayList<String> topReceivers = new ArrayList<String>();
+
+			//get top senders
+			query = "SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("No senders...");
+				return;
+	 	   	}
+	 	   	while(resultSet.next()){
+	 	   		String add = resultSet.getInt("sender_ID") + "," + resultSet.getInt("numberOfSends");
+				topSenders.add(add);
+				System.out.println(add);
+			}
+			//get top receivers
+			query = "SELECT recipient_ID, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
+	    	resultSet =statement.executeQuery(query);
+			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+	  		{
+	  			System.out.println();
+				System.out.println("No receivers...");
+				return;
+	 	   	}
+			while(resultSet.next()){
+	 	   		String add = resultSet.getInt("recipient_ID") + "," + resultSet.getInt("numberOfReceives");
+				topReceivers.add(add);
+				System.out.println(add);
+
+			}
+
+			ArrayList<String> finalResults = new ArrayList<String>();
+			//get sender names and print messages
+			for(int i=0; i<numberofUsers; i++){
+				finalResults.add(topSenders.get(i));
+				//System.out.println(topSenders.get(i));
+			}
+
+			for(int i=0; i<numberofUsers; i++){
+				for(int j=0; j<topReceivers.size(); j++)
+				{
+					String[] finList = finalResults.get(i).split(",");
+					String[] rec = topReceivers.get(j).split(",");
+
+					int finListInt = Integer.parseInt(finList[1]);
+					int recInt = Integer.parseInt(rec[1]);
+
+					if(finListInt<recInt)
+					{
+						finalResults.add(i,topReceivers.get(j));
+						topReceivers.remove(j);
+					}
+					else if(j==0)
+					{
+						break;
+					}
+				}
+			}
+
+			for(int i=0; i<numberofUsers; i++)
+			{
+				System.out.println(finalResults.get(i));
+			}
+
+			connection.commit();
+			Thread.sleep(1000);
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}
 	
+
+
+
+//	SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP dateTo GROUP BY sender_ID ORDER BY numberOfSends DESC;
+
+//	SELECT recipient_ID, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '2005-05-05 10:10:10' GROUP BY recipient_ID ORDER BY numberOfReceives DESC;
+
 	}
 	
 	public void dropUser(int profileID) throws SQLException{
