@@ -639,9 +639,120 @@ public class FaceSpace {
 	 *			 -Could do it with a graph but then we have to build 
 	 *			  a graph of everyone in our database
 	 */
-	public void threeDegrees(int userA, int userB) throws SQLException{
+	public void threeDegrees(String userAEmail, String userBEmail) throws SQLException{
+		
+		try {
+		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		    statement = connection.createStatement();
+			
+			
+			//get user A info
+	    	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+userAEmail+"'";
+	    	ResultSet resultSet =statement.executeQuery(query);    
+			int userAID = -1;
+			String userAFName=null, userALName=null;
+			while(resultSet.next())
+	  		{
+				userAID = resultSet.getInt(1);
+				userAFName = resultSet.getString(2).trim();		//remove whitespace on names
+				userALName = resultSet.getString(3).trim();
+	 	   	}
+	 	   	
+	 	   	//get user B info
+	 	   	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+userBEmail+"'";
+	    	ResultSet resultSet =statement.executeQuery(query);    
+			int userBID = -1;
+			String userBFName=null, userBLName=null;
+			while(resultSet.next())
+	  		{
+				userBID = resultSet.getInt(1);
+				userBFName = resultSet.getString(2).trim();		//remove whitespace on names
+				userBLName = resultSet.getString(3).trim();
+	 	   	}
+	 	   	
+			//get user A's friends
+			ArrayList<Integer> friendIDs = new ArrayList<Integer>();
+			ArrayList<Integer> path = new ArrayList<Integer>();
+			path.add(userAID);
+			int numHops = 0;
+			path = findPath(path, numHops, userBID);
+			
+
+			Thread.sleep(1000);
+
+		    resultSet.close();
+		}	
+		catch(Exception Ex)  
+		{
+			System.out.println("Machine Error: " + Ex.toString());
+		}
+		finally{
+			try {
+				if (statement!=null) statement.close();
+			} catch (SQLException e) {
+				System.out.println("Cannot close Statement. Machine error: "+e.toString());
+			}
+		}		
+	
+	}
+	
+	public ArrayList<Integer> findPath(ArrayList<Integer> path, int numHops, int userBID) throws SQLException{
+		
+		if(path.contains(userBID)){
+			System.out.println("PATH FOUND");
+			for(int i :path){
+				System.out.println(i);
+			}
+			return path;
+		}
+		else if(numHops == 4){
+			System.out.println("THERE IS NO PATH");
+			return path;
+		}
+		else{
+			int currentID = path.get(path.size()-1);	
+			query = "SELECT friend_ID, established FROM friends WHERE profile_ID = "+currentID;
+			resultSet =statement.executeQuery(query);   
+			int established = 0, friendID = -1; 
+			while(resultSet.next())
+	  		{
+				friendID = resultSet.getInt(1);
+				established = resultSet.getInt(2);
+				if(established == 1 && !path.contains(friendID)){
+					path.add(friendID);
+					numHops++;
+					path = findPath(path, numHops, userBID);
+				}
+				
+	 	   	}	
+			
+			query = "SELECT profile_ID FROM friends WHERE friend_ID = "+currentID;
+			resultSet =statement.executeQuery(query);    
+			while(resultSet.next())
+	  		{
+				friendID = resultSet.getInt(1);
+				established = resultSet.getInt(2);
+				if(established == 1 && !path.contains(friendID)){
+					path.add(friendID);
+					numHops++;
+					path = findPath(path, numHops, userBID);	
+				}
+				
+	 	   	}
+			return path;
+			
+			
+		}
+		
+		
+		
+		
+		
+			
 		
 	}
+	
 	
 	public void topMessagers(int numberofUsers, int months) throws SQLException{
 		/*Display the top k users who have sent or received the highest number of messages during 

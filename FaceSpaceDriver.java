@@ -54,6 +54,8 @@ public class FaceSpaceDriver {
 				case 9:
 					searchForUser();
 					break;
+				case 10:
+					threeDegrees();
 				case 11: 
 					topMessagers();
 					break;
@@ -126,6 +128,12 @@ public class FaceSpaceDriver {
 	private static void searchForUser() throws SQLException {
 		String userSearch = promptString("Enter your search");
 		fs.searchForUser(userSearch);
+	}
+
+	private static void threeDegrees() throws SQLException {
+		String userAEmail = promptString("Enter user A's email");
+		String userBEmail = promptString("Enter user B's email");
+		fs.threeDegrees(userAEmail, userBEmail);
 	}
 
 	private static void topMessagers() throws SQLException{
