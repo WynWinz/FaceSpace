@@ -56,6 +56,7 @@ public class FaceSpaceDriver {
 					break;
 				case 10:
 					threeDegrees();
+					break;
 				case 11: 
 					topMessagers();
 					break;
@@ -232,6 +233,7 @@ public class FaceSpaceDriver {
 		System.out.println("7. Send message to user");
 		System.out.println("8. Display messages");
 		System.out.println("9. Search for user");
+		System.out.println("10. Three Degrees");
 		System.out.println("11. Top Messagers");
 		System.out.println("12. Drop User");
 		System.out.println("13. Demo all functions");

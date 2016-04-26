@@ -26,6 +26,7 @@ public class FaceSpace {
     private PreparedStatement prepStatement; //used to create a prepared statement, that will be later reused
     private ResultSet resultSet; //used to hold the result of your query (if one exists)
 	private String query;
+	private boolean pathFound;
 	
 	public FaceSpace() throws SQLException{
 		setupDatabase();
@@ -661,7 +662,7 @@ public class FaceSpace {
 	 	   	
 	 	   	//get user B info
 	 	   	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+userBEmail+"'";
-	    	ResultSet resultSet =statement.executeQuery(query);    
+	    	resultSet =statement.executeQuery(query);    
 			int userBID = -1;
 			String userBFName=null, userBLName=null;
 			while(resultSet.next())
@@ -676,9 +677,12 @@ public class FaceSpace {
 			ArrayList<Integer> path = new ArrayList<Integer>();
 			path.add(userAID);
 			int numHops = 0;
+			pathFound = false;
 			path = findPath(path, numHops, userBID);
-			
-
+			pathFound = false;
+			if(!path.contains(userBID)){
+				System.out.println("There is no path between these users");
+			}
 			Thread.sleep(1000);
 
 		    resultSet.close();
@@ -704,45 +708,66 @@ public class FaceSpace {
 			for(int i :path){
 				System.out.println(i);
 			}
+			pathFound = true;
 			return path;
 		}
 		else if(numHops == 4){
-			System.out.println("THERE IS NO PATH");
+			//System.out.println("THERE IS NO PATH");
 			return path;
 		}
 		else{
+			
+			//get friends of most recently added user
 			int currentID = path.get(path.size()-1);	
+			System.out.println("CURRENT ID = "+currentID);
+			ArrayList<Integer> friends = new ArrayList<Integer>();
+			
 			query = "SELECT friend_ID, established FROM friends WHERE profile_ID = "+currentID;
 			resultSet =statement.executeQuery(query);   
 			int established = 0, friendID = -1; 
-			while(resultSet.next())
+			while(resultSet.next() && pathFound == false)
 	  		{
 				friendID = resultSet.getInt(1);
 				established = resultSet.getInt(2);
 				if(established == 1 && !path.contains(friendID)){
-					path.add(friendID);
-					numHops++;
-					path = findPath(path, numHops, userBID);
-				}
-				
+					friends.add(friendID);
+				} 
 	 	   	}	
-			
-			query = "SELECT profile_ID FROM friends WHERE friend_ID = "+currentID;
+	 	   	System.out.println("DOING THE SECOND QUERY...");
+			query = "SELECT profile_ID, established FROM friends WHERE friend_ID = "+currentID;
 			resultSet =statement.executeQuery(query);    
-			while(resultSet.next())
+			System.out.println("QUERY EXECUTED");
+			while(resultSet.next() && pathFound == false)
 	  		{
 				friendID = resultSet.getInt(1);
 				established = resultSet.getInt(2);
 				if(established == 1 && !path.contains(friendID)){
-					path.add(friendID);
-					numHops++;
-					path = findPath(path, numHops, userBID);	
+					friends.add(friendID);
 				}
-				
 	 	   	}
+	 	   	
+	 	   	for(int i=0; i<friends.size(); i++){
+	 	   		path.add(friends.get(i));
+	 	   		numHops++;
+	 	   		int sizeBefore = path.size();
+	 	   		path = findPath(path,numHops,userBID);
+	 	   		if(path.contains(userBID)){
+	 	   			return path;
+	 	   		}
+	 	   		else{		//restore
+	 	   			numHops--;
+	 	   			for(int k=sizeBefore-1; k<path.size(); k++){
+	 	   				path.remove(i);
+	 	   			}
+	 	   		}
+	 	   		
+	 	   	}
+	 	   	
+	 	   	
+	 	   	
+	 	   	
+	 	   	
 			return path;
-			
-			
 		}
 		
 		
