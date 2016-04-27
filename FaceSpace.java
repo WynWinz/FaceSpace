@@ -628,19 +628,6 @@ public class FaceSpace {
 		}
 	}
 	
-	/*
-	 * Steps:
-	 * 1. get A's friends
-	 * 2. check if B is one of rA's friends (1 hop)
-	 * 3. get friends of A's friends
-	 * 4. check if B is a friend of A's friends (2 hops)
-	 * 5. get friends of friends of A's friends
-	 * 6. check if B is friend of a friend of A's friends (3 hops)
-	 * Concerns: -Did I say that right? haha
-	 *			 -Do we need to do B to A as well?
-	 *			 -Could do it with a graph but then we have to build 
-	 *			  a graph of everyone in our database
-	 */
 	public void threeDegrees(String userAEmail, String userBEmail) throws SQLException{
 		
 		try {
@@ -993,8 +980,3 @@ public class FaceSpace {
 	}
 	
 }
-
-
-
-
-
