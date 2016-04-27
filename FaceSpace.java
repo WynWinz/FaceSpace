@@ -636,19 +636,6 @@ public class FaceSpace {
 		}
 	}
 	
-	/*
-	 * Steps:
-	 * 1. get A's friends
-	 * 2. check if B is one of rA's friends (1 hop)
-	 * 3. get friends of A's friends
-	 * 4. check if B is a friend of A's friends (2 hops)
-	 * 5. get friends of friends of A's friends
-	 * 6. check if B is friend of a friend of A's friends (3 hops)
-	 * Concerns: -Did I say that right? haha
-	 *			 -Do we need to do B to A as well?
-	 *			 -Could do it with a graph but then we have to build 
-	 *			  a graph of everyone in our database
-	 */
 	public void threeDegrees(String userAEmail, String userBEmail) throws SQLException{
 		
 		try {
@@ -901,8 +888,61 @@ public class FaceSpace {
 
 	}
 	
-	public void dropUser(int profileID) throws SQLException{
+	public void dropUser(string email) throws SQLException{
+		
+	try {
+	    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+    	//connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	    statement = connection.createStatement();
 	
+		ArrayList<String> allInfo = new ArrayList<String>();
+
+		int userID = -1;
+			
+		//Get user info
+		query = "SELECT profile_ID FROM profiles WHERE email = '"+userEmail+"'";
+    	resultSet =statement.executeQuery(query);
+		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+  		{
+  			System.out.println();
+			System.out.println("User that email does not exist.");
+			return;
+ 	   	}
+		while(resultSet.next()){
+			userID = resultSet.getInt(1);
+		}
+
+    	//deletes from profile table
+		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
+			int result =statement.executeUpdate(query);
+		//deletes from friends table
+		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
+			int result =statement.executeUpdate(query);
+		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
+			int resultSet =statement.executeUpdate(query);
+		//deletes from members table on cascade
+		//messages gets deleted on cascade if both users don't exits
+
+		//trigger for groupNumber
+
+
+		connection.commit();
+		Thread.sleep(1000);
+	    resultSet.close();
+	}	
+	catch(Exception Ex)  
+	{
+		System.out.println("Machine Error: " + Ex.toString());
+	}
+	finally{
+		try {
+			if (statement!=null) statement.close();
+		} catch (SQLException e) {
+			System.out.println("Cannot close Statement. Machine error: "+e.toString());
+		}
+	}
+
+
 	}
 	
 	public void setupDatabase() throws SQLException{
@@ -992,7 +1032,8 @@ public class FaceSpace {
 			}
 		}	
 		resultSet.close();
- 	   	connection.commit();			
-	}	
+ 	   	connection.commit();		
+		
+	}
+	
 }
-

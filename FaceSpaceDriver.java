@@ -137,17 +137,17 @@ public class FaceSpaceDriver {
 		fs.threeDegrees(userAEmail, userBEmail);
 	}
 
+	/* Display the top k users who have sent or received the highest number of messages during 
+	 * the past x months. x and k should be an input parameters to this function.
+	 */
 	private static void topMessagers() throws SQLException{
-		int numberOfUsers = promptInt("How mand top users would you like to see");
+		int numberOfUsers = promptInt("How many top users would you like to see");
 		int months = promptInt("Enter the number of months you'd like you go back");
 		fs.topMessagers(numberOfUsers, months);
-		/*Display the top k users who have sent or received the highest number of messages during 
-		the past x months. x and k should be an input parameters to this function.
-		*/
 	}
 
 	private static void dropUser() throws SQLException{
-
+		
 	}
 
 	private static void runDemo() throws SQLException {
@@ -161,6 +161,7 @@ public class FaceSpaceDriver {
 		subjects.add("Concert");
 		fs.setupDemo(emails, groupName, subjects);
 
+		//demo create users
 		String fname = "Josh";
 		String lname = "Grant";
 		String email1 = emails.get(0);
@@ -173,6 +174,7 @@ public class FaceSpaceDriver {
 		dateOfBirth = "1974-10-22";
 		fs.createUser(fname, lname, email2, dateOfBirth);
 
+		//demo initiate & establish friendship
 		fs.initiateFriendship(email1, email2);
 		fs.establishFriendship(email2, email1);
 
@@ -186,22 +188,26 @@ public class FaceSpaceDriver {
 		fs.initiateFriendship(email3, email2);
 		fs.establishFriendship(email2, email3);
 
+		//demo display friends
 		fs.displayFriends(email1);
 		fs.displayFriends(email2);
 
 		
+		//demo create group
 		String description = "junior cs students at Pitt";
 		int memLimit = 25;
 		fs.createGroup(groupName, description, memLimit);
 
 		System.out.println("");
 
+		//demo add to group
 		for(String email : emails) {
 			fs.addToGroup(email, groupName);
 		}
 
 		System.out.println("");
 
+		//demo send messages
 		String subject = subjects.get(0);
 		String body = "Hi Kevin, how are you?";
 		fs.sendMessageToUser(email1, email2, subject, body);
@@ -210,10 +216,19 @@ public class FaceSpaceDriver {
 		body = "I have an extra ticket to the daft punk concert, you in?";
 		fs.sendMessageToUser(email3, email2, subject, body);
 
+		//demo display messages
 		fs.displayMessages(email2);	
 
+		//demo user search
 		System.out.println("Searching users with .com emails");
 		fs.searchForUser(".com");
+
+		//demo three degrees
+
+		//demo top messages
+
+		//demo drop user
+
 	}
 
 	private static int getOption() {
