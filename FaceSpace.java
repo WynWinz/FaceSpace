@@ -676,7 +676,7 @@ public class FaceSpace {
 			}
 			else{
 				//Get the user's names and print the path between user A and user B
-				System.out.println("Shortest path between these users: \n");
+				System.out.println("Shortest path between " + userAFName + " " + userALName + " and "+ userBFName + " " + userBLName + ":\n");
 				for(int i :optPath){
 					query = "SELECT fname, lname FROM Profiles WHERE profile_ID = "+i;
 					resultSet =statement.executeQuery(query);    
@@ -855,9 +855,9 @@ public class FaceSpace {
 				}
 			}
 
-			for(int i=0; i<numberofUsers; i++)
+			for(String fr : finalResults)
 			{
-				System.out.println(finalResults.get(i));
+				System.out.println(fr);
 			}
 
 			connection.commit();
@@ -883,7 +883,7 @@ public class FaceSpace {
 
 	}
 	
-	public void dropUser(int profileID) throws SQLException{
+	public void dropUser(String email) throws SQLException{
 	
 	}
 	

@@ -147,7 +147,8 @@ public class FaceSpaceDriver {
 	}
 
 	private static void dropUser() throws SQLException{
-
+		String email = promptString("Enter the email of the user to be deleted");
+		fs.dropUser(email);
 	}
 
 	private static void runDemo() throws SQLException {
@@ -155,11 +156,15 @@ public class FaceSpaceDriver {
 		emails.add("j.grant@gmail.com");
 		emails.add("funnyman12@yahoo.com");
 		emails.add("wynwinz@hotmail.com");
+		emails.add("chrisc11@gmail.com");
+		emails.add("ryanching7@aol.com");
 		String groupName = "CS Juniors";
 		ArrayList<String> subjects = new ArrayList<String>();
 		subjects.add("Long Time");
 		subjects.add("Concert");
 		fs.setupDemo(emails, groupName, subjects);
+
+		System.out.println("");
 
 		//demo create users
 		String fname = "Josh";
@@ -174,16 +179,27 @@ public class FaceSpaceDriver {
 		dateOfBirth = "1974-10-22";
 		fs.createUser(fname, lname, email2, dateOfBirth);
 
-		//demo initiate & establish friendship
-		fs.initiateFriendship(email1, email2);
-		fs.establishFriendship(email2, email1);
-
 		fname = "Wyn";
 		lname = "Mellett";
 		String email3 = emails.get(2);
 		dateOfBirth = "1994-03-06";
-		fs.createUser(fname, lname, email3, dateOfBirth);
+		fs.createUser(fname, lname, email3, dateOfBirth);		
 
+		fname = "Chris";
+		lname = "Corsi";
+		String email4 = emails.get(3);
+		dateOfBirth = "1994-12-16";
+		fs.createUser(fname, lname, email4, dateOfBirth);
+
+		fname = "Ryan";
+		lname = "Ching";
+		String email5 = emails.get(4);
+		dateOfBirth = "1994-10-10";
+		fs.createUser(fname, lname, email5, dateOfBirth);		
+
+		//demo initiate & establish friendship
+		fs.initiateFriendship(email1, email2);
+		fs.establishFriendship(email2, email1);
 
 		fs.initiateFriendship(email3, email2);
 		fs.establishFriendship(email2, email3);
@@ -224,11 +240,20 @@ public class FaceSpaceDriver {
 		fs.searchForUser(".com");
 
 		//demo three degrees
+		fs.initiateFriendship(email4, email5);
+		fs.establishFriendship(email5, email4);
+		fs.initiateFriendship(email4, email2);
+		fs.establishFriendship(email2, email4);
+		System.out.println("");
+
+		fs.threeDegrees(email2, email5);
+		System.out.println("");
 
 		//demo top messages
+		fs.topMessagers(3, 6);
 
 		//demo drop user
-
+		//fs.dropUser()
 	}
 
 	private static int getOption() {
