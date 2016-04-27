@@ -25,6 +25,8 @@ public class FaceSpace {
     private Statement statement; //used to create an instance of the connection
     private PreparedStatement prepStatement; //used to create a prepared statement, that will be later reused
     private ResultSet resultSet; //used to hold the result of your query (if one exists)
+    private ResultSet resultSet2; //used to hold the result of your query (if one exists)
+
 	private String query;
 	private ArrayList<Integer> optPath;
 	private int minimumSize;
@@ -803,8 +805,9 @@ public class FaceSpace {
 			ArrayList<String> topReceivers = new ArrayList<String>();
 
 			//get top senders
-			query = "SELECT email, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
+			query = "SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
 	    	resultSet =statement.executeQuery(query);
+
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
 	  			System.out.println();
@@ -812,12 +815,12 @@ public class FaceSpace {
 				return;
 	 	   	}
 	 	   	while(resultSet.next()){
-	 	   		String add = resultSet.getInt("email") + "," + resultSet.getInt("numberOfSends");
+	 	   		String add = resultSet.getInt("sender_ID") + "," + resultSet.getInt("numberOfSends");
 				topSenders.add(add);
 				//System.out.println(add);
 			}
 			//get top receivers
-			query = "SELECT email, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
+			query = "SELECT recipient_ID, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
 	    	resultSet =statement.executeQuery(query);
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -826,20 +829,21 @@ public class FaceSpace {
 				return;
 	 	   	}
 			while(resultSet.next()){
-	 	   		String add = resultSet.getInt("email") + "," + resultSet.getInt("numberOfReceives");
+	 	   		String add = resultSet.getInt("recipient_ID") + "," + resultSet.getInt("numberOfReceives");
 				topReceivers.add(add);
 				//System.out.println(add);
 
 			}
-
 			ArrayList<String> finalResults = new ArrayList<String>();
 			//get sender names and print messages
 			for(int i=0; i<topSenders.size(); i++){
 				finalResults.add(topSenders.get(i));
+
 				//System.out.println(topSenders.get(i));
 			}
 			
 			int size = topReceivers.size();
+
 
 			for(int i=0; i<topSenders.size(); i++){
 				for(int j=0; j<size; j++)
@@ -864,12 +868,27 @@ public class FaceSpace {
 			}
 
 			//System.out.println(finalResults.size());
+			ArrayList<String> emails = new ArrayList<String>();
 
+			for(int i = 0; i< finalResults.size(); i++)
+			{
+				String[] idTemp = finalResults.get(i).split(",");
+				int id = Integer.parseInt(idTemp[0]);
+
+				query = "SELECT email FROM Profiles WHERE profile_ID = '"+id+ "'";
+		    	resultSet =statement.executeQuery(query);
+				
+				while(resultSet.next()){
+		 	   		String add = resultSet.getString("email");
+					emails.add(add);
+				}
+			}
 
 			if(numberofUsers>topSenders.size())
 			{
 				for(int i=0; i<finalResults.size();i++)
 				{
+					System.out.print(emails.get(i) + " ");
 					System.out.println(finalResults.get(i));
 				}
 			}
