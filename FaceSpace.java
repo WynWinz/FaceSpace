@@ -26,7 +26,8 @@ public class FaceSpace {
     private PreparedStatement prepStatement; //used to create a prepared statement, that will be later reused
     private ResultSet resultSet; //used to hold the result of your query (if one exists)
 	private String query;
-	private boolean pathFound;
+	private ArrayList<Integer> optPath;
+	private int minimumSize;
 	
 	public FaceSpace() throws SQLException{
 		setupDatabase();
@@ -645,8 +646,7 @@ public class FaceSpace {
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
 	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-		    statement = connection.createStatement();
-			
+		    statement = connection.createStatement();	
 			
 			//get user A info
 	    	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+userAEmail+"'";
@@ -677,12 +677,34 @@ public class FaceSpace {
 			ArrayList<Integer> path = new ArrayList<Integer>();
 			path.add(userAID);
 			int numHops = 0;
-			pathFound = false;
+			minimumSize = Integer.MAX_VALUE;
+			optPath = new ArrayList<Integer>();
 			path = findPath(path, numHops, userBID);
-			pathFound = false;
-			if(!path.contains(userBID)){
+			numHops = 0;
+			minimumSize = Integer.MAX_VALUE;
+			
+			//check if optimal path contains user B's ID
+			if(!optPath.contains(userBID)){
 				System.out.println("There is no path between these users");
 			}
+			else{
+				//Get the user's names and print the path between user A and user B
+				System.out.println("Shortest path between these users: \n");
+				for(int i :optPath){
+					query = "SELECT fname, lname FROM Profiles WHERE profile_ID = "+i;
+					resultSet =statement.executeQuery(query);    
+				
+					while(resultSet.next())
+					{
+						if(i != userBID)
+							System.out.print(resultSet.getString(1).trim()+" "+resultSet.getString(2).trim()+", ");
+						else
+							System.out.print(resultSet.getString(1).trim()+" "+resultSet.getString(2).trim()+".");
+					}
+				}
+
+			}
+			System.out.println();
 			Thread.sleep(1000);
 
 		    resultSet.close();
@@ -703,29 +725,29 @@ public class FaceSpace {
 	
 	public ArrayList<Integer> findPath(ArrayList<Integer> path, int numHops, int userBID) throws SQLException{
 		
-		if(path.contains(userBID)){
-			System.out.println("PATH FOUND");
-			for(int i :path){
-				System.out.println(i);
+		//Base case- we found user B and the path is shorter than our shortest path
+		if(path.contains(userBID) && path.size() < minimumSize){
+			minimumSize = path.size();
+			optPath = new ArrayList<Integer>();
+			for(int i : path){
+				optPath.add(i);
 			}
-			pathFound = true;
 			return path;
 		}
-		else if(numHops == 4){
-			//System.out.println("THERE IS NO PATH");
+		//If 3 or more hops, backtrack
+		else if(numHops > 2){
 			return path;
 		}
+		//else, iterate through all the friends of this user	
 		else{
-			
-			//get friends of most recently added user
 			int currentID = path.get(path.size()-1);	
-			System.out.println("CURRENT ID = "+currentID);
-			ArrayList<Integer> friends = new ArrayList<Integer>();
 			
+			//get list of current user's established friends
+			ArrayList<Integer> friends = new ArrayList<Integer>();
 			query = "SELECT friend_ID, established FROM friends WHERE profile_ID = "+currentID;
 			resultSet =statement.executeQuery(query);   
 			int established = 0, friendID = -1; 
-			while(resultSet.next() && pathFound == false)
+			while(resultSet.next())
 	  		{
 				friendID = resultSet.getInt(1);
 				established = resultSet.getInt(2);
@@ -733,11 +755,9 @@ public class FaceSpace {
 					friends.add(friendID);
 				} 
 	 	   	}	
-	 	   	System.out.println("DOING THE SECOND QUERY...");
 			query = "SELECT profile_ID, established FROM friends WHERE friend_ID = "+currentID;
 			resultSet =statement.executeQuery(query);    
-			System.out.println("QUERY EXECUTED");
-			while(resultSet.next() && pathFound == false)
+			while(resultSet.next())
 	  		{
 				friendID = resultSet.getInt(1);
 				established = resultSet.getInt(2);
@@ -746,35 +766,23 @@ public class FaceSpace {
 				}
 	 	   	}
 	 	   	
+	 	   	//iterate through friends
 	 	   	for(int i=0; i<friends.size(); i++){
 	 	   		path.add(friends.get(i));
 	 	   		numHops++;
-	 	   		int sizeBefore = path.size();
+	 	   		int sizeBefore = path.size()-1;
+	 	   		//recurse with path with new friend added
 	 	   		path = findPath(path,numHops,userBID);
-	 	   		if(path.contains(userBID)){
-	 	   			return path;
-	 	   		}
-	 	   		else{		//restore
-	 	   			numHops--;
-	 	   			for(int k=sizeBefore-1; k<path.size(); k++){
-	 	   				path.remove(i);
-	 	   			}
-	 	   		}
-	 	   		
+				//restore back to previous state 
+				numHops--;
+				for(int k=sizeBefore; k<path.size(); k++){
+					path.remove(k);
+				}
 	 	   	}
-	 	   	
-	 	   	
-	 	   	
-	 	   	
 	 	   	
 			return path;
 		}
 		
-		
-		
-		
-		
-			
 		
 	}
 	
@@ -881,8 +889,6 @@ public class FaceSpace {
 			}
 		}
 	
-
-
 
 //	SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP dateTo GROUP BY sender_ID ORDER BY numberOfSends DESC;
 
