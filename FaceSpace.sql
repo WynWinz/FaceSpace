@@ -86,3 +86,18 @@ CREATE TABLE Messages (
 --	END IF;
 --END;
 --/
+
+
+CREATE OR REPLACE TRIGGER updateGroupSize
+	AFTER DELETE ON Members
+	REFERENCING NEW as newRow
+	FOR EACH ROW
+	UPDATE Groups
+		SET numMembers = (select numMembers from Groups WHERE :newRow.group_ID = group_ID)-1
+   		WHERE :newRow.group_ID = group_ID;
+END;
+/
+
+
+
+

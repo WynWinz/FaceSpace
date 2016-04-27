@@ -918,7 +918,7 @@ public class FaceSpace {
 		//messages gets deleted on cascade if both users don't exits
 
 		//trigger for groupNumber
-
+		
 
 		connection.commit();
 		Thread.sleep(1000);
