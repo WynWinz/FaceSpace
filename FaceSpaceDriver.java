@@ -147,7 +147,7 @@ public class FaceSpaceDriver {
 	}
 
 	private static void dropUser() throws SQLException{
-
+		
 	}
 
 	private static void runDemo() throws SQLException {

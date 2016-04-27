@@ -773,7 +773,6 @@ public class FaceSpace {
 		
 	}
 	
-	
 	public void topMessagers(int numberofUsers, int months) throws SQLException{
 		/*Display the top k users who have sent or received the highest number of messages during 
 		the past x months. x and k should be an input parameters to this function.
@@ -883,8 +882,61 @@ public class FaceSpace {
 
 	}
 	
-	public void dropUser(int profileID) throws SQLException{
+	public void dropUser(string email) throws SQLException{
+		
+	try {
+	    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
+    	//connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	    statement = connection.createStatement();
 	
+		ArrayList<String> allInfo = new ArrayList<String>();
+
+		int userID = -1;
+			
+		//Get user info
+		query = "SELECT profile_ID FROM profiles WHERE email = '"+userEmail+"'";
+    	resultSet =statement.executeQuery(query);
+		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
+  		{
+  			System.out.println();
+			System.out.println("User that email does not exist.");
+			return;
+ 	   	}
+		while(resultSet.next()){
+			userID = resultSet.getInt(1);
+		}
+
+    	//deletes from profile table
+		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
+			int result =statement.executeUpdate(query);
+		//deletes from friends table
+		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
+			int result =statement.executeUpdate(query);
+		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
+			int resultSet =statement.executeUpdate(query);
+		//deletes from members table on cascade
+		//messages gets deleted on cascade if both users don't exits
+
+		//trigger for groupNumber
+
+
+		connection.commit();
+		Thread.sleep(1000);
+	    resultSet.close();
+	}	
+	catch(Exception Ex)  
+	{
+		System.out.println("Machine Error: " + Ex.toString());
+	}
+	finally{
+		try {
+			if (statement!=null) statement.close();
+		} catch (SQLException e) {
+			System.out.println("Cannot close Statement. Machine error: "+e.toString());
+		}
+	}
+
+
 	}
 	
 	public void setupDatabase() throws SQLException{
