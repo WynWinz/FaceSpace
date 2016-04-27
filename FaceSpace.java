@@ -40,7 +40,7 @@ public class FaceSpace {
 
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 
 	    	query = "SELECT MAX(profile_ID) FROM Profiles";
@@ -87,7 +87,7 @@ public class FaceSpace {
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 			
 			query = 	"SELECT profile_ID "
@@ -167,7 +167,7 @@ public class FaceSpace {
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 			
 		    query = 	"SELECT profile_ID "
@@ -245,7 +245,7 @@ public class FaceSpace {
 	public void displayFriends(String email) throws SQLException{
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 			
 	    	query = "SELECT profile_ID, fname, lname FROM Profiles WHERE email = '"+email+"'";
@@ -308,7 +308,7 @@ public class FaceSpace {
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 
 			query = "SELECT groupName FROM Groups WHERE groupName = '"+name+"'";
@@ -354,7 +354,7 @@ public class FaceSpace {
 	public void addToGroup(String email, String groupName) throws SQLException{
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 
 			//Get group info and check membership limit
@@ -396,22 +396,30 @@ public class FaceSpace {
 			}
 			
 			//Insert member into group
-		    query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
-			int result = statement.executeUpdate(query);
-
-			//increment group number of members
-			numMembers++;
-			query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
-			result = statement.executeUpdate(query);
-
+			try{			
+				//increment group number of members
+				numMembers++;
+				query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
+				int result = statement.executeUpdate(query);
+				
+				//update membership
+				query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
+				result = statement.executeUpdate(query);
+				
+				System.out.println("Member added.");
+			}
+			catch(SQLException e){
+				System.out.println(e.getMessage());
+			}
+			
 			connection.commit();
-			System.out.println("Member added.");
+
 			Thread.sleep(1000);
 		    resultSet.close();
 		}	
 		catch(Exception Ex)  
 		{
-			System.out.println("Machine Error: " + Ex.toString());
+			System.out.println("Machine Error: " + Ex.getMessage());
 		}
 		finally{
 			try {
@@ -430,7 +438,7 @@ public class FaceSpace {
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 
 			int msgID = 1;
@@ -498,7 +506,7 @@ public class FaceSpace {
 	
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 		
 			ArrayList<Integer> senderIDs = new ArrayList<Integer>();
@@ -575,7 +583,7 @@ public class FaceSpace {
 		//search areas: fname, lname, email, DOB
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 
 		    ArrayList<String> names = new ArrayList<String>();
@@ -645,7 +653,7 @@ public class FaceSpace {
 		
 		try {
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();	
 			
 			//get user A info
@@ -672,7 +680,7 @@ public class FaceSpace {
 				userBLName = resultSet.getString(3).trim();
 	 	   	}
 	 	   	
-			//get user A's friends
+			//User recursive backtracking to find a path between user a and b
 			ArrayList<Integer> friendIDs = new ArrayList<Integer>();
 			ArrayList<Integer> path = new ArrayList<Integer>();
 			path.add(userAID);
@@ -779,13 +787,10 @@ public class FaceSpace {
 					path.remove(k);
 				}
 	 	   	}
-	 	   	
+
 			return path;
-		}
-		
-		
+		}	
 	}
-	
 	
 	public void topMessagers(int numberofUsers, int months) throws SQLException{
 		/*Display the top k users who have sent or received the highest number of messages during 
@@ -804,7 +809,7 @@ public class FaceSpace {
 			String dateTo = ft.format(c.getTime());
 
 		    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+	//    	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 		    statement = connection.createStatement();
 		
 			ArrayList<String> topSenders = new ArrayList<String>();
@@ -946,7 +951,7 @@ public class FaceSpace {
 	public void setupDemo(ArrayList<String> emails, String groupName, ArrayList<String> subjects) throws SQLException {
 		
 		connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
-	   	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+//	   	connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 	    statement = connection.createStatement();
 	    ResultSet resultSet = null;
 	
@@ -986,15 +991,8 @@ public class FaceSpace {
 				}
 			}
 		}	
-
 		resultSet.close();
- 	   	connection.commit();		
-		
-	}
-	
+ 	   	connection.commit();			
+	}	
 }
-
-
-
-
 
