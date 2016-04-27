@@ -888,7 +888,7 @@ public class FaceSpace {
 
 	}
 	
-	public void dropUser(string email) throws SQLException{
+	public void dropUser(String email) throws SQLException{
 		
 	try {
 	    connection.setAutoCommit(false); //the default is true and every statement executed is considered a transaction.
@@ -900,7 +900,7 @@ public class FaceSpace {
 		int userID = -1;
 			
 		//Get user info
-		query = "SELECT profile_ID FROM profiles WHERE email = '"+userEmail+"'";
+		query = "SELECT profile_ID FROM profiles WHERE email = '"+email+"'";
     	resultSet =statement.executeQuery(query);
 		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
   		{
@@ -917,9 +917,9 @@ public class FaceSpace {
 			int result =statement.executeUpdate(query);
 		//deletes from friends table
 		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
-			int result =statement.executeUpdate(query);
+			result =statement.executeUpdate(query);
 		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
-			int resultSet =statement.executeUpdate(query);
+			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
 		//messages gets deleted on cascade if both users don't exits
 
