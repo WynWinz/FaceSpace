@@ -147,8 +147,12 @@ public class FaceSpaceDriver {
 	}
 
 	private static void dropUser() throws SQLException{
+<<<<<<< HEAD
 		String email = promptString("Enter the email of the user to be deleted");
 		fs.dropUser(email);
+=======
+		
+>>>>>>> c993639ac2bc4addabfd18b770b1766843c6c315
 	}
 
 	private static void runDemo() throws SQLException {
