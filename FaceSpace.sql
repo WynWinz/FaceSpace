@@ -75,6 +75,7 @@ CREATE TABLE Messages (
 	CONSTRAINT FK_Recipient FOREIGN KEY (recipient_ID) REFERENCES Profiles(profile_ID)
 		ON DELETE CASCADE
 );
+
 CREATE OR REPLACE TRIGGER CheckGroupSize
 	BEFORE INSERT OR UPDATE ON Groups
 	REFERENCING NEW as newRow
@@ -93,6 +94,6 @@ CREATE OR REPLACE TRIGGER updateGroupSize
 	FOR EACH ROW
 	UPDATE Groups
 		SET numMembers = (select numMembers from Groups WHERE :newRow.group_ID = group_ID)-1
-   		WHERE :newRow.group_ID = group_ID;
+   		WHERE :newRow.group_ID = group_ID
 END;
 /

@@ -208,7 +208,7 @@ public class FaceSpaceDriver {
 		fs.displayFriends(email1);
 		fs.displayFriends(email2);
 
-		
+		System.out.println("");
 		//demo create group
 		String description = "junior cs students at Pitt";
 		int memLimit = 25;

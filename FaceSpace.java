@@ -803,7 +803,7 @@ public class FaceSpace {
 			ArrayList<String> topReceivers = new ArrayList<String>();
 
 			//get top senders
-			query = "SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
+			query = "SELECT email, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
 	    	resultSet =statement.executeQuery(query);
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -812,12 +812,12 @@ public class FaceSpace {
 				return;
 	 	   	}
 	 	   	while(resultSet.next()){
-	 	   		String add = resultSet.getInt("sender_ID") + "," + resultSet.getInt("numberOfSends");
+	 	   		String add = resultSet.getInt("email") + "," + resultSet.getInt("numberOfSends");
 				topSenders.add(add);
-				System.out.println(add);
+				//System.out.println(add);
 			}
 			//get top receivers
-			query = "SELECT recipient_ID, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
+			query = "SELECT email, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
 	    	resultSet =statement.executeQuery(query);
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
@@ -826,21 +826,23 @@ public class FaceSpace {
 				return;
 	 	   	}
 			while(resultSet.next()){
-	 	   		String add = resultSet.getInt("recipient_ID") + "," + resultSet.getInt("numberOfReceives");
+	 	   		String add = resultSet.getInt("email") + "," + resultSet.getInt("numberOfReceives");
 				topReceivers.add(add);
-				System.out.println(add);
+				//System.out.println(add);
 
 			}
 
 			ArrayList<String> finalResults = new ArrayList<String>();
 			//get sender names and print messages
-			for(int i=0; i<numberofUsers; i++){
+			for(int i=0; i<topSenders.size(); i++){
 				finalResults.add(topSenders.get(i));
 				//System.out.println(topSenders.get(i));
 			}
+			
+			int size = topReceivers.size();
 
-			for(int i=0; i<numberofUsers; i++){
-				for(int j=0; j<topReceivers.size(); j++)
+			for(int i=0; i<topSenders.size(); i++){
+				for(int j=0; j<size; j++)
 				{
 					String[] finList = finalResults.get(i).split(",");
 					String[] rec = topReceivers.get(j).split(",");
@@ -852,6 +854,7 @@ public class FaceSpace {
 					{
 						finalResults.add(i,topReceivers.get(j));
 						topReceivers.remove(j);
+						size = size - 1;
 					}
 					else if(j==0)
 					{
@@ -860,9 +863,22 @@ public class FaceSpace {
 				}
 			}
 
-			for(String fr : finalResults)
+			//System.out.println(finalResults.size());
+
+
+			if(numberofUsers>topSenders.size())
 			{
-				System.out.println(fr);
+				for(int i=0; i<finalResults.size();i++)
+				{
+					System.out.println(finalResults.get(i));
+				}
+			}
+			else
+			{
+				for(int i=0; i<numberofUsers;i++)
+				{
+					System.out.println(finalResults.get(i));
+				}
 			}
 
 			connection.commit();
