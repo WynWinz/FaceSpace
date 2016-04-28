@@ -283,7 +283,7 @@ public class FaceSpace {
 				resultSet =statement.executeQuery(query);    
 				while(resultSet.next())
 		  		{
-					System.out.println((i+1)+". "+resultSet.getString(1) + " " +resultSet.getString(2) + "email: "+resultSet.getString(3));
+					System.out.println((i+1)+". "+resultSet.getString(1).trim() + " " +resultSet.getString(2).trim() + "\tEmail: "+resultSet.getString(3));
 	 	   		}
 				
 			}
@@ -558,7 +558,7 @@ public class FaceSpace {
 				}
 				System.out.println();
 				System.out.println("Message "+(i+1)+": ");
-				System.out.println("From: "+senderFName+" "+senderLName);
+				System.out.println("From: "+senderFName.trim()+" "+senderLName);
 				System.out.println("Subject: "+subjects.get(i));
 				System.out.println("Body: "+texts.get(i));
 				System.out.println("Time sent: "+times.get(i));
@@ -886,10 +886,12 @@ public class FaceSpace {
 
 			if(numberofUsers>topSenders.size())
 			{
+				System.out.println("	Email 		Profile ID  Number of messages");
 				for(int i=0; i<finalResults.size();i++)
 				{
-					System.out.print(emails.get(i) + " ");
-					System.out.println(finalResults.get(i));
+					System.out.print(emails.get(i).trim() + " ");
+					String[] parts = finalResults.get(i).split(",");
+					System.out.println("\t   " + parts[0] + "\t\t   " + parts[1]);
 				}
 			}
 			else
@@ -958,8 +960,7 @@ public class FaceSpace {
 		//deletes from members table on cascade
 		//messages gets deleted on cascade if both users don't exits
 
-		//trigger for groupNumber
-		
+		System.out.println(email + " removed.");
 
 		connection.commit();
 		Thread.sleep(1000);
