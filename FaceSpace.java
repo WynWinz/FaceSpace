@@ -1,3 +1,4 @@
+
 /*
  * Authors:
  * Ryan Ching
@@ -876,7 +877,7 @@ public class FaceSpace {
 				String[] idTemp = finalResults.get(i).split(",");
 				int id = Integer.parseInt(idTemp[0]);
 
-				query = "SELECT email FROM Profiles WHERE profile_ID = "+id; // edited
+				query = "SELECT email FROM Profiles WHERE profile_ID = '"+id+ "'";
 		    	resultSet =statement.executeQuery(query);
 				
 				while(resultSet.next()){
@@ -954,9 +955,9 @@ public class FaceSpace {
 		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
 			int result =statement.executeUpdate(query);
 		//deletes from friends table
-		query = "DELETE FROM Friends WHERE profile_ID = "+userID;
+		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
-		query ="DELETE FROM Friends WHERE friend_ID = "+userID;
+		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
 		
@@ -991,27 +992,8 @@ public class FaceSpace {
 			result = statement.executeUpdate(query);
 		}
 		
-		
-		
-		ArrayList<Integer> messagesToDrop = new ArrayList<Integer>();
-		query = "SELECT msg_ID FROM messages where sender_ID = -1 AND recipient_ID = -1";
-		    resultSet =statement.executeQuery(query);
-		if(!resultSet.isBeforeFirst())//returns true if there is data in result set
-		{
-			System.out.println();
-			System.out.println("No messages to delete");
-			return;
-	    }
-		while(resultSet.next()){
-			messagesToDrop.add(resultSet.getInt(1));
-		}
 
-		//trigger for groupNumber
-		for(int i = 0; i<messagesToDrop.size();i++)
-		{
-			query = "DELETE FROM Messages where msg_ID = '"+messagesToDrop.get(i)+"'";
-		    resultSet =statement.executeUpdate(query);
-		}
+
 
 		System.out.println(email + " removed.");
 
