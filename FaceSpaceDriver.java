@@ -157,7 +157,7 @@ public class FaceSpaceDriver {
 		emails.add("funnyman12@yahoo.com");
 		emails.add("wynwinz@hotmail.com");
 		emails.add("chrisc11@gmail.com");
-		emails.add("ryanching7@aol.com");
+		emails.add("ryanching7@firefox.net");
 		String groupName = "CS Juniors";
 		ArrayList<String> subjects = new ArrayList<String>();
 		subjects.add("Long Time");
@@ -236,6 +236,7 @@ public class FaceSpaceDriver {
 		//demo display messages
 		fs.displayMessages(email2);	
 
+		System.out.println("");
 		//demo user search
 		System.out.println("Searching users with .com emails");
 		fs.searchForUser(".com");
@@ -253,8 +254,9 @@ public class FaceSpaceDriver {
 		//demo top messages
 		fs.topMessagers(3, 6);
 
+		System.out.println("");
 		//demo drop user
-		//fs.dropUser()
+		fs.dropUser(email4);
 	}
 
 	private static int getOption() {

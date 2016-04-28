@@ -283,7 +283,7 @@ public class FaceSpace {
 				resultSet =statement.executeQuery(query);    
 				while(resultSet.next())
 		  		{
-					System.out.println((i+1)+". "+resultSet.getString(1) + " " +resultSet.getString(2) + "email: "+resultSet.getString(3));
+					System.out.println((i+1)+". "+resultSet.getString(1).trim() + " " +resultSet.getString(2).trim() + "\tEmail: "+resultSet.getString(3));
 	 	   		}
 				
 			}
@@ -398,7 +398,7 @@ public class FaceSpace {
 			}
 			
 			//Insert member into group
-			try{			
+//			try{			
 				//increment group number of members
 				numMembers++;
 				query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
@@ -406,13 +406,14 @@ public class FaceSpace {
 				
 				//update membership
 				query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
+				System.out.println(query);
 				result = statement.executeUpdate(query);
 				
 				System.out.println("Member added.");
-			}
-			catch(SQLException e){
-				System.out.println(e.getMessage());
-			}
+	//		}
+	//		catch(SQLException e){
+	//			System.out.println(e.getMessage());
+	//		}
 			
 			connection.commit();
 
@@ -558,7 +559,7 @@ public class FaceSpace {
 				}
 				System.out.println();
 				System.out.println("Message "+(i+1)+": ");
-				System.out.println("From: "+senderFName+" "+senderLName);
+				System.out.println("From: "+senderFName.trim()+" "+senderLName);
 				System.out.println("Subject: "+subjects.get(i));
 				System.out.println("Body: "+texts.get(i));
 				System.out.println("Time sent: "+times.get(i));
@@ -886,10 +887,12 @@ public class FaceSpace {
 
 			if(numberofUsers>topSenders.size())
 			{
+				System.out.println("	Email 		Profile ID  Number of messages");
 				for(int i=0; i<finalResults.size();i++)
 				{
-					System.out.print(emails.get(i) + " ");
-					System.out.println(finalResults.get(i));
+					System.out.print(emails.get(i).trim() + " ");
+					String[] parts = finalResults.get(i).split(",");
+					System.out.println("\t   " + parts[0] + "\t\t   " + parts[1]);
 				}
 			}
 			else
@@ -940,7 +943,7 @@ public class FaceSpace {
 		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
   		{
   			System.out.println();
-			System.out.println("User that email does not exist.");
+			System.out.println("User with that email does not exist.");
 			return;
  	   	}
 		while(resultSet.next()){
@@ -956,9 +959,61 @@ public class FaceSpace {
 		query ="DELETE FROM Friends WHERE friend_ID = "+userID;
 			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
-		//messages gets deleted on cascade if both users don't exits
+		
+		int groupID;
+		ArrayList<Integer> groupsToDecrement = new ArrayList<Integer>();
+		ArrayList<Integer> numMembers = new ArrayList<Integer>();
+		query = "SELECT group_ID FROM members WHERE profile_ID = "+userID;
+		resultSet =statement.executeQuery(query);
+		System.out.println(query);
+		if(!resultSet.isBeforeFirst()){
+			System.out.println("member is not in any groups");
+			return;
+		}
+		while(resultSet.next()){
+			groupsToDecrement.add(resultSet.getInt(1));			
+		}
+		
+		for(int i=0; i<groupsToDecrement.get(i); i++){
+			query = "SELECT numMembers FROM groups WHERE group_ID = "+groupsToDecrement.get(i);
+			resultSet = statement.executeQuery(query);
+			System.out.println(query);
+			while(resultSet.next()){
+				numMembers.add(resultSet.getInt(1));
+			}
+		}
+		
+		
+		
+		for(int i=0; i<groupsToDecrement.size(); i++){
+			query = "UPDATE groups SET numMembers = "+numMembers.get(i)+"-1 WHERE group_ID = "+groupsToDecrement.get(i);
+			System.out.println(query);
+			result = statement.executeUpdate(query);
+		}
+		
+		
+		
+		ArrayList<Integer> messagesToDrop = new ArrayList<Integer>();
+		query = "SELECT msg_ID FROM messages where sender_ID = -1 AND recipient_ID = -1";
+		    resultSet =statement.executeQuery(query);
+		if(!resultSet.isBeforeFirst())//returns true if there is data in result set
+		{
+			System.out.println();
+			System.out.println("No messages to delete");
+			return;
+	    }
+		while(resultSet.next()){
+			messagesToDrop.add(resultSet.getInt(1));
+		}
 
 		//trigger for groupNumber
+		for(int i = 0; i<messagesToDrop.size();i++)
+		{
+			query = "DELETE FROM Messages where msg_ID = '"+messagesToDrop.get(i)+"'";
+		    resultSet =statement.executeUpdate(query);
+		}
+
+		System.out.println(email + " removed.");
 
 
 		connection.commit();
