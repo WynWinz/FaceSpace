@@ -1,3 +1,4 @@
+
 /*
  * Authors:
  * Ryan Ching
@@ -398,7 +399,7 @@ public class FaceSpace {
 			}
 			
 			//Insert member into group
-			try{			
+//			try{			
 				//increment group number of members
 				numMembers++;
 				query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
@@ -406,13 +407,14 @@ public class FaceSpace {
 				
 				//update membership
 				query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
+				System.out.println(query);
 				result = statement.executeUpdate(query);
 				
 				System.out.println("Member added.");
-			}
-			catch(SQLException e){
-				System.out.println(e.getMessage());
-			}
+	//		}
+	//		catch(SQLException e){
+	//			System.out.println(e.getMessage());
+	//		}
 			
 			connection.commit();
 
@@ -942,40 +944,38 @@ public class FaceSpace {
 		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
   		{
   			System.out.println();
-			System.out.println("User that email does not exist.");
+			System.out.println("User with that email does not exist.");
 			return;
  	   	}
 		while(resultSet.next()){
 			userID = resultSet.getInt(1);
 		}
 
-		int result;
-		/*int sender = 0;
-		int recipient = 0;
-		ArrayList<String> recipients = new ArrayList<String>();
-		ArrayList<String> senders = new ArrayList<String>();
-		query = "SELECT recipient_ID FROM Messages";
-			resultSet = statement.executeQuery(query);
-		while(resultSet.next()) {
-			recipients.add(resultSet.getString(1));
+
+		int groupID;
+		ArrayList<Integer> groupsToDecrement = new ArrayList<Integer>();
+		ArrayList<Integer> numMembers = new ArrayList<Integer>();
+		query = "SELECT group_ID FROM members WHERE profile_ID = "+userID;
+		resultSet =statement.executeQuery(query);
+		System.out.println(query);
+		if(!resultSet.isBeforeFirst()){
+			System.out.println("member is not in any groups");
+			return;
 		}
-		query = "SELECT sender_ID FROM Messages";
-			resultSet = statement.executeQuery(query);
-		while(resultSet.next()) {
-			senders.add(resultSet.getString(1));
+		while(resultSet.next()){
+			groupsToDecrement.add(resultSet.getInt(1));			
 		}
-		//update messages
-		if(recipients.contains(userID)) {
-			System.out.println("recipient");
-			query = "UPDATE Messages SET recipient_ID = -1 WHERE recipient_ID = " + userID;
-			result = statement.executeUpdate(query);
-		}
-		if(senders.contains(userID)) {
-			System.out.println("sender");
-			query = "UPDATE Messages SET sender_ID = -1 WHERE sender_ID = " + userID;
-			result = statement.executeUpdate(query);
-		}*/
 		
+		for(int i=0; i<groupsToDecrement.size(); i++){
+			query = "SELECT numMembers FROM groups WHERE group_ID = "+groupsToDecrement.get(i);
+			resultSet = statement.executeQuery(query);
+			System.out.println(query);
+			while(resultSet.next()){
+				numMembers.add(resultSet.getInt(1));
+				System.out.println(resultSet.getInt(1));
+			}
+		}
+
     	//deletes from profile table
 		query = "DELETE FROM Profiles WHERE email ='"+ email +"'";
 			result = statement.executeUpdate(query);
@@ -983,9 +983,13 @@ public class FaceSpace {
 		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
 		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
-			result =statement.executeUpdate(query);
-		//deletes from members table on cascade
-		//messages gets deleted on cascade if both users don't exits
+			result =statement.executeUpdate(query);	
+		
+		for(int i=0; i<groupsToDecrement.size(); i++){
+			query = "UPDATE groups SET numMembers = "+numMembers.get(i)+"-1 WHERE group_ID = "+groupsToDecrement.get(i);
+			System.out.println(query);
+			result = statement.executeUpdate(query);
+		}
 
 		System.out.println(email + " removed.");
 
@@ -1011,8 +1015,8 @@ public class FaceSpace {
 	public void setupDatabase() throws SQLException{
 		
 		String username, password;
-		username = "edm34"; //This is your username in oracle
-		password = "3913516"; //This is your password in oracle
+		username = "rac138"; //This is your username in oracle
+		password = "3853081"; //This is your password in oracle
 		try{
 			System.out.println("Registering DB..");
 		    // Register the oracle driver.  
