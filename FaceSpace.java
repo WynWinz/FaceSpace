@@ -961,6 +961,7 @@ public class FaceSpace {
 			}
 		}
 
+		int result;
     	//deletes from profile table
 		query = "DELETE FROM Profiles WHERE email ='"+ email +"'";
 			result = statement.executeUpdate(query);
@@ -999,8 +1000,8 @@ public class FaceSpace {
 	public void setupDatabase() throws SQLException{
 		
 		String username, password;
-		username = "rac138"; //This is your username in oracle
-		password = "3853081"; //This is your password in oracle
+		username = "edm34"; //This is your username in oracle
+		password = "3913516"; //This is your password in oracle
 		try{
 			System.out.println("Registering DB..");
 		    // Register the oracle driver.  
