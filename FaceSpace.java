@@ -960,7 +960,36 @@ public class FaceSpace {
 			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
 		
+		int groupID;
+		ArrayList<Integer> groupsToDecrement = new ArrayList<Integer>();
+		ArrayList<Integer> numMembers = new ArrayList<Integer>();
+		query = "SELECT group_ID FROM members WHERE profile_ID = "+userID;
+		resultSet =statement.executeQuery(query);
+		System.out.println(query);
+		if(!resultSet.isBeforeFirst()){
+			System.out.println("member is not in any groups");
+			return;
+		}
+		while(resultSet.next()){
+			groupsToDecrement.add(resultSet.getInt(1));			
+		}
 		
+		for(int i=0; i<groupsToDecrement.get(i); i++){
+			query = "SELECT numMembers FROM groups WHERE group_ID = "+groupsToDecrement.get(i);
+			resultSet = statement.executeQuery(query);
+			System.out.println(query);
+			while(resultSet.next()){
+				numMembers.add(resultSet.getInt(1));
+			}
+		}
+		
+		
+		
+		for(int i=0; i<groupsToDecrement.size(); i++){
+			query = "UPDATE groups SET numMembers = "+numMembers.get(i)+"-1 WHERE group_ID = "+groupsToDecrement.get(i);
+			System.out.println(query);
+			result = statement.executeUpdate(query);
+		}
 		
 
 
