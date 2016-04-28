@@ -25,6 +25,8 @@ public class FaceSpace {
     private Statement statement; //used to create an instance of the connection
     private PreparedStatement prepStatement; //used to create a prepared statement, that will be later reused
     private ResultSet resultSet; //used to hold the result of your query (if one exists)
+    private ResultSet resultSet2; //used to hold the result of your query (if one exists)
+
 	private String query;
 	private ArrayList<Integer> optPath;
 	private int minimumSize;
@@ -281,7 +283,7 @@ public class FaceSpace {
 				resultSet =statement.executeQuery(query);    
 				while(resultSet.next())
 		  		{
-					System.out.println((i+1)+". "+resultSet.getString(1) + " " +resultSet.getString(2) + "email: "+resultSet.getString(3));
+					System.out.println((i+1)+". "+resultSet.getString(1).trim() + " " +resultSet.getString(2).trim() + "\tEmail: "+resultSet.getString(3));
 	 	   		}
 				
 			}
@@ -557,7 +559,7 @@ public class FaceSpace {
 				}
 				System.out.println();
 				System.out.println("Message "+(i+1)+": ");
-				System.out.println("From: "+senderFName+" "+senderLName);
+				System.out.println("From: "+senderFName.trim()+" "+senderLName);
 				System.out.println("Subject: "+subjects.get(i));
 				System.out.println("Body: "+texts.get(i));
 				System.out.println("Time sent: "+times.get(i));
@@ -806,6 +808,7 @@ public class FaceSpace {
 			//get top senders
 			query = "SELECT sender_ID, COUNT(*) as numberOfSends FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo +"' GROUP BY sender_ID ORDER BY numberOfSends DESC";
 	    	resultSet =statement.executeQuery(query);
+
 			if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
 	  		{
 	  			System.out.println();
@@ -815,7 +818,7 @@ public class FaceSpace {
 	 	   	while(resultSet.next()){
 	 	   		String add = resultSet.getInt("sender_ID") + "," + resultSet.getInt("numberOfSends");
 				topSenders.add(add);
-				System.out.println(add);
+				//System.out.println(add);
 			}
 			//get top receivers
 			query = "SELECT recipient_ID, COUNT(*) as numberOfReceives FROM MESSAGES WHERE timeSent >= TIMESTAMP '"+ dateTo + "' GROUP BY recipient_ID ORDER BY numberOfReceives DESC";
@@ -829,19 +832,22 @@ public class FaceSpace {
 			while(resultSet.next()){
 	 	   		String add = resultSet.getInt("recipient_ID") + "," + resultSet.getInt("numberOfReceives");
 				topReceivers.add(add);
-				System.out.println(add);
+				//System.out.println(add);
 
 			}
-
 			ArrayList<String> finalResults = new ArrayList<String>();
 			//get sender names and print messages
-			for(int i=0; i<numberofUsers; i++){
+			for(int i=0; i<topSenders.size(); i++){
 				finalResults.add(topSenders.get(i));
+
 				//System.out.println(topSenders.get(i));
 			}
+			
+			int size = topReceivers.size();
 
-			for(int i=0; i<numberofUsers; i++){
-				for(int j=0; j<topReceivers.size(); j++)
+
+			for(int i=0; i<topSenders.size(); i++){
+				for(int j=0; j<size; j++)
 				{
 					String[] finList = finalResults.get(i).split(",");
 					String[] rec = topReceivers.get(j).split(",");
@@ -853,6 +859,7 @@ public class FaceSpace {
 					{
 						finalResults.add(i,topReceivers.get(j));
 						topReceivers.remove(j);
+						size = size - 1;
 					}
 					else if(j==0)
 					{
@@ -861,9 +868,39 @@ public class FaceSpace {
 				}
 			}
 
-			for(String fr : finalResults)
+			//System.out.println(finalResults.size());
+			ArrayList<String> emails = new ArrayList<String>();
+
+			for(int i = 0; i< finalResults.size(); i++)
 			{
-				System.out.println(fr);
+				String[] idTemp = finalResults.get(i).split(",");
+				int id = Integer.parseInt(idTemp[0]);
+
+				query = "SELECT email FROM Profiles WHERE profile_ID = '"+id+ "'";
+		    	resultSet =statement.executeQuery(query);
+				
+				while(resultSet.next()){
+		 	   		String add = resultSet.getString("email");
+					emails.add(add);
+				}
+			}
+
+			if(numberofUsers>topSenders.size())
+			{
+				System.out.println("	Email 		Profile ID  Number of messages");
+				for(int i=0; i<finalResults.size();i++)
+				{
+					System.out.print(emails.get(i).trim() + " ");
+					String[] parts = finalResults.get(i).split(",");
+					System.out.println("\t   " + parts[0] + "\t\t   " + parts[1]);
+				}
+			}
+			else
+			{
+				for(int i=0; i<numberofUsers;i++)
+				{
+					System.out.println(finalResults.get(i));
+				}
 			}
 
 			connection.commit();
@@ -927,7 +964,9 @@ public class FaceSpace {
 		
 
 
-		
+
+		System.out.println(email + " removed.");
+
 
 		connection.commit();
 		Thread.sleep(1000);
