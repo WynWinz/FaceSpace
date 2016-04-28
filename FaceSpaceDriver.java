@@ -253,7 +253,7 @@ public class FaceSpaceDriver {
 		fs.topMessagers(3, 6);
 
 		//demo drop user
-		//fs.dropUser()
+		fs.dropUser(email4);
 	}
 
 	private static int getOption() {

@@ -396,7 +396,7 @@ public class FaceSpace {
 			}
 			
 			//Insert member into group
-			try{			
+//			try{			
 				//increment group number of members
 				numMembers++;
 				query = "UPDATE Groups SET numMembers = "+numMembers+" WHERE group_ID =" +groupID;
@@ -404,13 +404,14 @@ public class FaceSpace {
 				
 				//update membership
 				query = "INSERT INTO Members (group_ID,profile_ID) VALUES ("+groupID+", "+profileID+")";			
+				System.out.println(query);
 				result = statement.executeUpdate(query);
 				
 				System.out.println("Member added.");
-			}
-			catch(SQLException e){
-				System.out.println(e.getMessage());
-			}
+	//		}
+	//		catch(SQLException e){
+	//			System.out.println(e.getMessage());
+	//		}
 			
 			connection.commit();
 
@@ -905,7 +906,7 @@ public class FaceSpace {
 		if(!resultSet.isBeforeFirst())			//returns true if there is data in result set
   		{
   			System.out.println();
-			System.out.println("User that email does not exist.");
+			System.out.println("User with that email does not exist.");
 			return;
  	   	}
 		while(resultSet.next()){
@@ -921,9 +922,11 @@ public class FaceSpace {
 		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
-		//messages gets deleted on cascade if both users don't exits
+		
+		
+		
 
-		//trigger for groupNumber
+
 		
 
 		connection.commit();
