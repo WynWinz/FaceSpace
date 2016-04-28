@@ -939,6 +939,7 @@ public class FaceSpace {
 			userID = resultSet.getInt(1);
 		}
 
+
 		int groupID;
 		ArrayList<Integer> groupsToDecrement = new ArrayList<Integer>();
 		ArrayList<Integer> numMembers = new ArrayList<Integer>();
@@ -961,29 +962,20 @@ public class FaceSpace {
 		}
 
     	//deletes from profile table
-		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
-			int result =statement.executeUpdate(query);
+		query = "DELETE FROM Profiles WHERE email ='"+ email +"'";
+			result = statement.executeUpdate(query);
 		//deletes from friends table
 		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
 		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
-			result =statement.executeUpdate(query);
-		//deletes from members table on cascade
-		
-		
-		
-		
+			result =statement.executeUpdate(query);	
 		
 		for(int i=0; i<groupsToDecrement.size(); i++){
 			query = "UPDATE groups SET numMembers = "+numMembers.get(i)+"-1 WHERE group_ID = "+groupsToDecrement.get(i);
 			result = statement.executeUpdate(query);
 		}
-		
-
-
 
 		System.out.println(email + " removed.");
-
 
 		connection.commit();
 		Thread.sleep(1000);
