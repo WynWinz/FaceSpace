@@ -951,16 +951,6 @@ public class FaceSpace {
 			userID = resultSet.getInt(1);
 		}
 
-    	//deletes from profile table
-		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
-			int result =statement.executeUpdate(query);
-		//deletes from friends table
-		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
-			result =statement.executeUpdate(query);
-		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
-			result =statement.executeUpdate(query);
-		//deletes from members table on cascade
-		
 		int groupID;
 		ArrayList<Integer> groupsToDecrement = new ArrayList<Integer>();
 		ArrayList<Integer> numMembers = new ArrayList<Integer>();
@@ -975,14 +965,29 @@ public class FaceSpace {
 			groupsToDecrement.add(resultSet.getInt(1));			
 		}
 		
-		for(int i=0; i<groupsToDecrement.get(i); i++){
+		for(int i=0; i<groupsToDecrement.size(); i++){
 			query = "SELECT numMembers FROM groups WHERE group_ID = "+groupsToDecrement.get(i);
 			resultSet = statement.executeQuery(query);
 			System.out.println(query);
 			while(resultSet.next()){
 				numMembers.add(resultSet.getInt(1));
+				System.out.println(resultSet.getInt(1));
 			}
 		}
+
+		System.out.println("HELLO");
+
+    	//deletes from profile table
+		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
+			int result =statement.executeUpdate(query);
+		//deletes from friends table
+		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
+			result =statement.executeUpdate(query);
+		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
+			result =statement.executeUpdate(query);
+		//deletes from members table on cascade
+		
+		
 		
 		
 		
@@ -1020,8 +1025,8 @@ public class FaceSpace {
 	public void setupDatabase() throws SQLException{
 		
 		String username, password;
-		username = "edm34"; //This is your username in oracle
-		password = "3913516"; //This is your password in oracle
+		username = "rac138"; //This is your username in oracle
+		password = "3853081"; //This is your password in oracle
 		try{
 			System.out.println("Registering DB..");
 		    // Register the oracle driver.  
