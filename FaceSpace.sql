@@ -56,10 +56,8 @@ CREATE TABLE Members (
 	group_ID 	integer,
 	profile_ID	integer,
 	CONSTRAINT PK_Members PRIMARY KEY (group_ID, profile_ID),
-	CONSTRAINT FK_MembersToGroups FOREIGN KEY (group_ID) REFERENCES Groups(group_ID)
-		ON DELETE CASCADE,
+	CONSTRAINT FK_MembersToGroups FOREIGN KEY (group_ID) REFERENCES Groups(group_ID),
 	CONSTRAINT FK_MembersToProfiles FOREIGN KEY (profile_ID) REFERENCES Profiles(profile_ID)
-		ON DELETE CASCADE
 );
 
 CREATE TABLE Messages (
@@ -87,15 +85,11 @@ BEGIN
 END;
 /
 
-
-CREATE OR REPLACE TRIGGER updateGroupSize
-	AFTER DELETE ON Members
-	REFERENCING NEW as newRow
-	FOR EACH ROW
+CREATE OR REPLACE TRIGGER removeMember
+	BEFORE DELETE ON Profiles
+	REFERENCING old as oldRow
+FOR EACH ROW
 BEGIN
-	UPDATE Groups
-		--SET numMembers = (select numMembers from Groups WHERE :newRow.group_ID = group_ID)-1
-   		SET numMembers = -1
-   		WHERE :newRow.group_ID = group_ID;
+	DELETE FROM Members WHERE profile_ID = :oldRow.profile_ID;
 END;
 /

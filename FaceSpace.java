@@ -949,9 +949,36 @@ public class FaceSpace {
 			userID = resultSet.getInt(1);
 		}
 
+		int result;
+		/*int sender = 0;
+		int recipient = 0;
+		ArrayList<String> recipients = new ArrayList<String>();
+		ArrayList<String> senders = new ArrayList<String>();
+		query = "SELECT recipient_ID FROM Messages";
+			resultSet = statement.executeQuery(query);
+		while(resultSet.next()) {
+			recipients.add(resultSet.getString(1));
+		}
+		query = "SELECT sender_ID FROM Messages";
+			resultSet = statement.executeQuery(query);
+		while(resultSet.next()) {
+			senders.add(resultSet.getString(1));
+		}
+		//update messages
+		if(recipients.contains(userID)) {
+			System.out.println("recipient");
+			query = "UPDATE Messages SET recipient_ID = -1 WHERE recipient_ID = " + userID;
+			result = statement.executeUpdate(query);
+		}
+		if(senders.contains(userID)) {
+			System.out.println("sender");
+			query = "UPDATE Messages SET sender_ID = -1 WHERE sender_ID = " + userID;
+			result = statement.executeUpdate(query);
+		}*/
+		
     	//deletes from profile table
-		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
-			int result =statement.executeUpdate(query);
+		query = "DELETE FROM Profiles WHERE email ='"+ email +"'";
+			result = statement.executeUpdate(query);
 		//deletes from friends table
 		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
 			result =statement.executeUpdate(query);
