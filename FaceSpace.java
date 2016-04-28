@@ -875,7 +875,7 @@ public class FaceSpace {
 				String[] idTemp = finalResults.get(i).split(",");
 				int id = Integer.parseInt(idTemp[0]);
 
-				query = "SELECT email FROM Profiles WHERE profile_ID = '"+id+ "'";
+				query = "SELECT email FROM Profiles WHERE profile_ID = "+id; // edited
 		    	resultSet =statement.executeQuery(query);
 				
 				while(resultSet.next()){
@@ -951,15 +951,15 @@ public class FaceSpace {
 		query = "DELETE FROM Profiles WHERE  email ='"+ email +"'";
 			int result =statement.executeUpdate(query);
 		//deletes from friends table
-		query = "DELETE FROM Friends WHERE profile_ID = '"+userID+"'";
+		query = "DELETE FROM Friends WHERE profile_ID = "+userID;
 			result =statement.executeUpdate(query);
-		query ="DELETE FROM Friends WHERE friend_ID = '"+userID+"'";
+		query ="DELETE FROM Friends WHERE friend_ID = "+userID;
 			result =statement.executeUpdate(query);
 		//deletes from members table on cascade
 		//messages gets deleted on cascade if both users don't exits
 
 		//trigger for groupNumber
-		
+
 
 		connection.commit();
 		Thread.sleep(1000);
