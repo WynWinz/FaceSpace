@@ -991,6 +991,27 @@ public class FaceSpace {
 			result = statement.executeUpdate(query);
 		}
 		
+		
+		
+		ArrayList<Integer> messagesToDrop = new ArrayList<Integer>();
+		query = "SELECT msg_ID FROM messages where sender_ID = -1 AND recipient_ID = -1";
+		    resultSet =statement.executeQuery(query);
+		if(!resultSet.isBeforeFirst())//returns true if there is data in result set
+		{
+			System.out.println();
+			System.out.println("No messages to delete");
+			return;
+	    }
+		while(resultSet.next()){
+			messagesToDrop.add(resultSet.getInt(1));
+		}
+
+		for(int i = 0; i<messagesToDrop.size();i++)
+		{
+			query = "DELETE FROM Messages where msg_ID = '"+messagesToDrop.get(i)+"'";
+		    resultSet =statement.executeUpdate(query);
+		}
+		
 
 
 
