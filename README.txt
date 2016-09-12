@@ -1,3 +1,5 @@
+CS 1555 - Databases
+
 Contributors:
 Ryan Ching
 Chris Corsi
